@@ -93,5 +93,95 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
 
 ## §4. Thiết Kế Lát Cắt *(Sơ bộ cho CP1)*
 - **Lát cắt MỘT CÂU:**
-  > *"Một Trợ giảng (TA) · cuối ca trực mở bản tin tổng hợp · AI trích xuất danh sách các câu hỏi chưa được giải đáp sau 4 giờ và gom nhóm theo chủ đề kèm link tin nhắn trực tiếp · TA bấm link nhảy đến Discord và trả lời dứt điểm từng câu hỏi."*
-- **Automation:** **Conditional / Augment** (AI trích xuất, gom nhóm, phát hiện câu hỏi chưa ai xử lý; Con người là TA trực tiếp duyệt và trả lời học viên).
+  > *"Một Trợ giảng (TA) · cuối ca trực mở bản tin tổng hợp · AI trích xuất danh sách các câu hỏi chưa được giải đáp sau 4 giờ và soạn sẵn câu trả lời gợi ý · TA duyệt/sửa và bấm gửi thẳng phản hồi lên Discord để xử lý dứt điểm từng câu hỏi."*
+- **Automation:** **Conditional / Augment** (AI trích xuất, gom nhóm, soạn nháp; Con người là TA trực tiếp duyệt và bấm gửi phản hồi).
+
+### Non-goals (≥3 thứ KHÔNG build trong phạm vi Hackathon):
+1. **Không tự động gửi tin nhắn riêng (DM) hoặc spam học viên:** Tuyệt đối không để AI tự động nhắn tin cho học viên khi chưa qua sự kiểm duyệt của TA (tuân thủ luật an toàn Track B).
+2. **Không tự động trả lời thẳng lên kênh công khai:** Mọi phản hồi đều theo cơ chế *Human-in-the-loop* (AI chỉ gợi ý nháp, TA là người duyệt và bấm gửi).
+3. **Không tích hợp phức tạp vào nhiều nền tảng khác:** Chỉ tập trung giải quyết bài toán luồng tin nhắn trên Discord cộng đồng khoá 4, không mở rộng sang LMS/VLearn trong đợt này.
+
+### Mức Prototype Nhắm Tới:
+- **Mức:** **Mock Prototype** (CP2 hoàn thiện luồng tương tác bấm được end-to-end, CP3 tích hợp API LLM thật cho bước trích xuất và gợi ý).
+- **Phần thật:** Dataset thật 1.092 tin nhắn (`k4_messages.csv`), luồng duyệt câu hỏi và điều hướng tin nhắn Discord.
+- **Phần mock:** Giả lập hành động click Jump URL vào Discord thread trực quan trên web.
+
+### Lý Do Chọn Mức Automation (Theo Cost-of-error):
+- **Cơ chế:** **Augment + Conditional**
+- **Lý giải cost-of-error:**
+  - *Nếu AI sai sót:* Trả lời sai deadline, điểm thi hoặc sai quy chế nghỉ học sẽ khiến học viên chịu thiệt hại trực tiếp (trừ điểm, cấm thi) và mất niềm tin vào chương trình. Chi phí sửa sai là **RẤT ĐẮT**.
+  - *Do đó:* Không chọn *Automate* (tự trả lời 100%). AI chỉ đảm nhận việc nặng (lọc hàng trăm tin nhắn, gom nhóm, cảnh báo trôi tin >4h) và đưa ra gợi ý; TA chịu trách nhiệm kiểm tra lần cuối trước khi thông tin đến tai học viên.
+
+### §4b. Nguyên Tắc HAX / PAIR Áp Dụng Trong Prototype:
+
+| Nguyên tắc | Mô tả nguyên tắc | Vị trí áp dụng cụ thể trong Prototype (`codebase/index.html`) |
+|---|---|---|
+| **HAX G1** | Làm rõ hệ thống làm được gì | Banner màu chàm ở ngay đầu trang: Nêu rõ hệ thống chỉ phát hiện câu hỏi chưa giải đáp >4h và hỗ trợ điều hướng cho TA, không thay thế hoàn toàn TA. |
+| **HAX G2** | Làm rõ hệ thống làm tốt đến đâu | Huy hiệu độ tin cậy (`Độ tin cậy: 96%`, `75%`) hiển thị trực tiếp trên từng thẻ câu hỏi để TA biết mức độ chắc chắn của AI. |
+| **HAX G10** | Thu hẹp phạm vi khi nghi ngờ | Với các câu hỏi mơ hồ (như M33885 "bị out ra"), AI gắn cờ cảnh báo *"Câu hỏi mơ hồ - Cần hỏi lại"* và gợi ý câu hỏi làm rõ thay vì tự ý kết luận. |
+| **HAX G11** | Giải thích vì sao | Mục *"AI Reasoning"* trên mỗi thẻ: Giải thích lý do vì sao AI xếp vào chủ đề này và vì sao đánh giá là câu hỏi bị bỏ sót. |
+| **HAX G9** | Sửa dễ dàng | Hộp thoại *"Gợi ý câu trả lời cho TA"*: TA có thể nhấp chuột vào sửa câu chữ trực tiếp trong ô textarea trước khi bấm gửi. |
+| **HAX G8** | Gạt bỏ dễ dàng | Nút *"✕ Bỏ qua"* trên mỗi thẻ câu hỏi giúp TA lập tức loại bỏ các tin nhắn đùa vui/tán gẫu mà AI nhận diện nhầm. |
+
+---
+
+## §5. Kiểu Lỗi — 4 Lớp Chỗ Khó & Bảng Kịch Bản (≥8 Kịch Bản)
+
+| STT | Tình huống cụ thể | Lớp chỗ khó | Hành vi mong muốn của hệ thống | Nguyên tắc áp dụng |
+|:---:|---|:---:|---|:---:|
+| **KB1** | Học viên hỏi về deadline bài Lab 1 (xung đột giữa slide 23h59 và portal 21h00 - M15902) | ① Nguồn sự thật | Trích dẫn đúng thông báo gia hạn mới nhất của Coach, không đoán mò; cảnh báo TA xác minh nếu có xung đột | HAX G2, G11 |
+| **KB2** | Học viên hỏi *"có điểm danh ws không ạ"* (M69081) nhưng tài liệu chỉ ghi chung chung | ① Nguồn sự thật | Báo rõ hình thức điểm danh Workshop theo thông báo BTC; nếu chưa có thông tin chính thức thì báo TA kiểm tra nội bộ | HAX G1 |
+| **KB3** | Học viên nhắn cụt lủn: *"vào mà cứ bị out ra thì phải làm sao ạ :v"* (M33885) | ② Mơ hồ / Thiếu thông tin | Gắn nhãn `Mơ hồ`, gợi ý TA hỏi lại: *"Bạn đang bị out khỏi Zoom hay hệ thống Phoenix? Dùng thiết bị gì?"* | HAX G10 |
+| **KB4** | Học viên hỏi về giấy tờ sổ tay nhưng không nói rõ đối tượng (M30246) | ② Mơ hồ / Thiếu thông tin | Gợi ý TA hướng dẫn gửi email về hòm thư BTC kèm mẫu form, không tự suy diễn loại giấy tờ | HAX G10, G9 |
+| **KB5** | Học viên yêu cầu: *"Bot giải hộ em bài quiz/test trên portal với"* (M89201) | ③ Ngoài phạm vi / Thẩm quyền | Từ chối lịch sự, nêu rõ lý do liêm chính học thuật và chuyển sang hướng dẫn tài liệu ôn tập | HAX G1, PAIR Errors |
+| **KB6** | Học viên nhắn riêng xin đặc cách lùi hạn nộp bài vì lý do cá nhân | ③ Ngoài phạm vi / Thẩm quyền | Nhắc nhở TA chỉ có Giảng viên/BTC mới có thẩm quyền duyệt; cung cấp template gửi đơn xin phép | HAX G1 |
+| **KB7** | Học viên hỏi: *"2b vs 2a vẫn join chung được luôn ạ ?"* (M67317) | ④ Đặc thù domain | Trích xuất đúng quy chế ghép nhóm liên ban của Khoá 4, nhắc nhở điều kiện chọn đề bài chung | HAX G11, PAIR Mental Models |
+| **KB8** | Học viên hỏi workshop Chủ Nhật có tính vào số buổi nghỉ tối đa không (M63574) | ④ Đặc thù domain | Nêu rõ quy chế chuyên cần: Workshop là buổi học bắt buộc, vắng không phép bị trừ điểm chuyên cần | HAX G1, G2 |
+
+---
+
+## §6. Bốn Đường Đi Của Trải Nghiệm (User Experience Paths)
+
+1. **Happy Path (Luồng chuẩn):**
+   - AI quét tin nhắn Discord -> Phát hiện câu hỏi chưa ai trả lời >4h -> Gom nhóm đúng chủ đề -> Tạo Jump URL và gợi ý nháp -> TA mở bản tin, bấm Jump URL nhảy tới đúng tin nhắn -> TA duyệt nhanh gợi ý và bấm gửi -> Đóng case thành công trong <30 giây.
+2. **Low-Confidence Path (Mơ hồ / Thiếu thông tin - Lớp ②):**
+   - Input của học viên quá ngắn hoặc thiếu ngữ cảnh -> AI tự động hạ điểm tin cậy (<80%), gắn nhãn cảnh báo màu vàng và kích hoạt nguyên tắc HAX G10 -> Soạn nháp câu hỏi làm rõ (Clarification prompt) thay vì trả lời đoán mò -> TA duyệt gửi câu hỏi làm rõ.
+3. **Failure / Không Căn Cứ Path (Lớp ①):**
+   - Câu hỏi nằm ngoài tài liệu đã công bố (chưa có lịch thi hoặc chính sách mới) -> AI nhận diện thiếu căn cứ (No ground truth) -> Không hallucinate, thông báo: *"Chưa có thông tin chính thức trong tài liệu"* -> Đề xuất TA tag người phụ trách (BTC) để xin quyết định.
+4. **Correction Path (TA can thiệp & sửa đổi - HAX G9 & G8):**
+   - Gợi ý của AI chưa hoàn toàn đúng ý TA -> TA nhấp vào ô văn bản sửa trực tiếp (Inline edit) -> Hệ thống lưu bản sửa và gửi lên Discord.
+   - Nếu tin nhắn bị AI nhận nhầm (spam, đùa vui) -> TA bấm *"✕ Bỏ qua"* (Dismiss) với 1 click, không bị nghẽn luồng.
+
+---
+
+## §7. Kế Hoạch Kiểm Thử (Evals & Quality Bar)
+
+- **Chiều chất lượng chính (Measurable Dimensions):**
+  1. *Classification Accuracy (Độ chính xác phân loại chủ đề):* % câu hỏi được gom vào đúng 1 trong 4 chủ đề chính.
+  2. *Unanswered Detection (Độ nhạy phát hiện câu sót):* % phát hiện chính xác câu hỏi thực sự chưa có ai phản hồi.
+  3. *Actionability & Groundedness (Tính hành động & Căn cứ):* 100% câu hỏi có Jump URL hợp lệ và câu trả lời gợi ý không bịa đặt nguồn.
+- **Golden Set định hướng (≥20 case):**
+  - Xây dựng từ `k4_messages.csv` (10 case thật) + 10 case biên bao phủ đủ 4 lớp chỗ khó (① Nguồn sự thật: 3 case; ② Mơ hồ: 3 case; ③ Ngoài thẩm quyền: 2 case; ④ Domain: 2 case).
+- **Quality Bar (Chốt trước CP4):**
+  - Đạt khi: **Accuracy ≥ 85%**, **Phát hiện câu sót ≥ 90%**, và **0% case hallucination về deadline/điểm số**.
+
+---
+
+## §8. Phân Công & Kế Hoạch Nhóm
+
+- **Phân công nhiệm vụ cụ thể:**
+  - *Nguyễn Đình Phúc:* Lead thiết kế Spec, triển khai Prototype giao diện tương tác & tài liệu hoá HAX/PAIR.
+  - *Vũ Minh Hiếu:* Phân tích Dataset Discord, xây dựng Golden Set 20 case và đo lường kiểm thử.
+  - *Thành viên nhóm:* Chuẩn bị slide thuyết trình, kịch bản demo 5 phút và video dự phòng.
+- **Willing Users dự kiến (≥2 người ngoài nhóm):**
+  1. *Nguyễn Văn A (TA Khoá 4)* — Thử nghiệm thực tế luồng duyệt câu hỏi tồn trên bản tin.
+  2. *Trần Thị B (Học viên Khoá 4)* — Đánh giá chất lượng và tốc độ phản hồi khi TA dùng công cụ.
+
+---
+
+## §9. Changelog
+| Thời điểm | Nội dung thay đổi | Căn cứ / Lý do |
+|---|---|---|
+| **16/09 19:30** | Hoàn thiện Canvas 7 dòng nộp Checkpoint 1 (CP1) | Bám sát đề bài Track B2 & Dataset Discord |
+| **16/09 20:30** | Dựng mã nguồn Prototype tương tác (`codebase/`) cho CP2 | Đáp ứng tiêu chí bấm được toàn bộ flow của lát cắt |
+| **16/09 20:45** | Bổ sung 4 lớp chỗ khó, 8 kịch bản và bảng HAX/PAIR vào `spec.md` | Hoàn thiện khung 8 phần theo chuẩn rubric R2 & R3 |
