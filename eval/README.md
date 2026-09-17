@@ -36,6 +36,8 @@ Có thêm **2 tin thật đối chứng**: M08376 (dấu chấm, không phải c
 
 - **[results_run_1.md](file:///Users/phucnguyen/Desktop/AI/hackathon/K4-3A-E403-DamNhauNgayMuaRoi/eval/results_run_1.md):** Bảng kết quả chạy đo lường Run 1 (Pass 88.6%, Intent 100%, Topic 94.3%, Action 88.6%).
 - **[failure_analysis_run_1.md](file:///Users/phucnguyen/Desktop/AI/hackathon/K4-3A-E403-DamNhauNgayMuaRoi/eval/failure_analysis_run_1.md):** Báo cáo phân tích chuyên sâu nguyên nhân 4 test case thất bại (`REAL-M33885`, `SYN-003`, `SYN-005`, `SYN-018`) theo chuẩn Rubric R4 và đề xuất giải pháp kỹ thuật cho Checkpoint 4.
+- **[results_run_2.md](file:///Users/phucnguyen/Desktop/AI/hackathon/K4-3A-E403-DamNhauNgayMuaRoi/eval/results_run_2.md):** Báo cáo nghiệm thu Run 2 sau khi áp dụng 4 Guardrails v1 (Pass 100.0%, 35/35 case) kèm bảng so sánh đối đầu Vòng lặp thực nghiệm (Run 1 vs Run 2).
+
 
 ## File và nguồn
 

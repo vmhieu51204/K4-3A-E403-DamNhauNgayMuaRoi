@@ -160,10 +160,24 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
   1. *Classification Accuracy (Độ chính xác phân loại chủ đề):* % câu hỏi được gom vào đúng 1 trong 4 chủ đề chính.
   2. *Unanswered Detection (Độ nhạy phát hiện câu sót):* % phát hiện chính xác câu hỏi thực sự chưa có ai phản hồi.
   3. *Actionability & Groundedness (Tính hành động & Căn cứ):* 100% câu hỏi có Jump URL hợp lệ và câu trả lời gợi ý không bịa đặt nguồn.
-- **Golden Set định hướng (≥20 case):**
-  - Xây dựng từ `k4_messages.csv` (10 case thật) + 10 case biên bao phủ đủ 4 lớp chỗ khó (① Nguồn sự thật: 3 case; ② Mơ hồ: 3 case; ③ Ngoài thẩm quyền: 2 case; ④ Domain: 2 case).
-- **Quality Bar (Chốt trước CP4):**
-  - Đạt khi: **Accuracy ≥ 85%**, **Phát hiện câu sót ≥ 90%**, và **0% case hallucination về deadline/điểm số**.
+- **Golden Set chính thức (35 cases kiểm thử tự động):**
+  - Xây dựng từ `k4_messages.csv` (12 case chatlog thật) + 23 case biên độc lập bao phủ đủ 4 lớp chỗ khó (① Nguồn sự thật, ② Mơ hồ cộc lốc, ③ Ngoài thẩm quyền & Liêm chính học thuật, ④ Đặc thù quy chế khoá học) kết hợp kiểm thử độ nhạy với Tấn công Tiêm chỉ thị (Prompt Injection) và Lọc tin nhắn đời thường (Chitchat).
+
+- **Quality Bar chốt cứng tại mốc CP4 (Spec Freeze — 21:00 17/9):**
+  - **Tỷ lệ Pass toàn diện:** $\ge 85\%$
+  - **Độ chính xác ý định (Intent Accuracy):** $\ge 90\%$
+  - **Độ chính xác phân loại (Topic Accuracy):** $\ge 85\%$
+  - **Độ chính xác hành vi (Action Accuracy):** $\ge 85\%$
+  - **Vi phạm an toàn / Hallucination:** **0%** (Tuyệt đối không bịa đặt deadline/quy chế, không tiếp tay gian lận quiz).
+
+- **Nghiệm thu thực nghiệm Vòng 1 vs Vòng 2 (Experiment Loop Validation):**
+  | Tiêu chí đo lường | Quality Bar cam kết | Lượt 1 (Run 1 — Baseline CP3) | Lượt 2 (Run 2 — Tối ưu CP4) | Đánh giá nghiệm thu |
+  |---|:---:|:---:|:---:|:---:|
+  | **Tỷ lệ Pass toàn bộ** | $\ge 85\%$ | **88.6%** (31/35) | **100.0%** (35/35) | **ĐẠT (Vượt chỉ tiêu)** |
+  | **Intent Accuracy** | $\ge 90\%$ | 100.0% | 100.0% | **ĐẠT** |
+  | **Topic Accuracy** | $\ge 85\%$ | 94.3% | 100.0% | **ĐẠT** |
+  | **Action Accuracy** | $\ge 85\%$ | 88.6% | 100.0% | **ĐẠT** |
+  | **Cảnh báo an toàn** | 0 case | 2 case cảnh báo | **0 case vi phạm** | **ĐẠT (Khắc phục triệt để)** |
 
 ---
 
@@ -185,3 +199,5 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
 | **16/09 19:30** | Hoàn thiện Canvas 7 dòng nộp Checkpoint 1 (CP1) | Bám sát đề bài Track B2 & Dataset Discord |
 | **16/09 20:30** | Dựng mã nguồn Prototype tương tác (`codebase/`) cho CP2 | Đáp ứng tiêu chí bấm được toàn bộ flow của lát cắt |
 | **16/09 20:45** | Bổ sung 4 lớp chỗ khó, 8 kịch bản và bảng HAX/PAIR vào `spec.md` | Hoàn thiện khung 8 phần theo chuẩn rubric R2 & R3 |
+| **17/09 15:30** | Hoàn thành bộ kiểm thử Golden Set 35 case (12 real + 23 synthetic) và đo lường Run 1 (Pass 88.6%, Intent 100%, Topic 94.3%) | Đạt tiêu chuẩn Checkpoint 3 (CP3), phát hiện 4 failure cases làm tiền đề cho CP4 |
+| **17/09 21:00** | **Đóng băng Spec (Spec Freeze CP4):** Chốt cứng Quality Bar, cập nhật kết quả Run 2 (Pass 100%) với 4 Guardrails v1, khởi tạo hồ sơ Validation | Đáp ứng trọn vẹn 5 tiêu chí checklist CP4 theo chuẩn Rubric R1-R4 |
