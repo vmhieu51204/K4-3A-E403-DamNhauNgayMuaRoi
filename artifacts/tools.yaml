@@ -1,0 +1,126 @@
+# ==============================================================================
+# ARTIFACTS/TOOLS.YAML — Khai Báo Công Cụ (Tool Declarations) Cho TA Copilot
+# Theo đúng mục 3.2 trong base_architecture.md
+# Đồng bộ 4 vị trí: tools.yaml <-> tools/__init__.py <-> tools/<name>/tool.py <-> eval
+# ==============================================================================
+
+tools:
+  - name: fetch_backlog_questions
+    description: >-
+      Quét và trích xuất danh sách các câu hỏi từ học viên chưa có phản hồi chính thức
+      sau khoảng thời gian quy định (mặc định > 4 giờ). Dùng khi Trợ giảng bắt đầu ca trực
+      hoặc yêu cầu xem danh sách câu hỏi đang bị tồn đọng trên Discord.
+    parameters:
+      type: object
+      properties:
+        min_hours:
+          type: number
+          description: "Số giờ tối thiểu câu hỏi bị tồn đọng chưa được trả lời (mặc định: 4.0)"
+          default: 4.0
+        topic:
+          type: string
+          description: "Lọc theo chủ đề câu hỏi nếu cần (attendance, lab, team, policy, technical, all)"
+          enum: [all, attendance, lab, team, policy, technical]
+          default: all
+        limit:
+          type: integer
+          description: "Số lượng câu hỏi tối đa cần lấy (mặc định: 10)"
+          default: 10
+      required: []
+
+  - name: search_course_kb
+    description: >-
+      Tra cứu thông tin chính thức từ cơ sở tri thức khoá học (Quy chế chuyên cần,
+      hạn nộp bài Lab, lịch tổ chức Workshop, quy chế ghép nhóm).
+      BẮT BUỘC gọi công cụ này để lấy căn cứ xác thực trước khi soạn câu trả lời,
+      tuyệt đối không tự suy diễn thông tin chính sách.
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: "Từ khoá hoặc câu hỏi cần tra cứu quy chế chính thức"
+        category:
+          type: string
+          description: "Danh mục quy chế cần tra cứu"
+          enum: [attendance, lab_deadline, team_rule, general_policy]
+      required: [query]
+
+  - name: request_clarification
+    description: >-
+      Áp dụng nguyên tắc HAX G10: Khi tin nhắn học viên quá ngắn, cộc lốc, mơ hồ hoặc
+      thiếu thông tin định danh màn hình/ứng dụng lỗi (ví dụ: 'vào mà cứ bị out ra',
+      'em vẫn không vào được', 'cái này nộp ở đâu').
+      Công cụ này sẽ tạm dừng phiên xử lý và trả về câu hỏi làm rõ cho học viên.
+    parameters:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: "Mã định danh tin nhắn gốc của học viên cần hỏi lại"
+        clarification_question:
+          type: string
+          description: "Nội dung câu hỏi làm rõ lịch sự, hướng dẫn học viên cung cấp thông tin cụ thể (thiết bị, màn hình, lỗi)"
+      required: [message_id, clarification_question]
+
+  - name: draft_grounded_reply
+    description: >-
+      Tạo bản nháp câu trả lời gợi ý cho Trợ giảng duyệt trước khi gửi.
+      Nội dung nháp BẮT BUỘC phải dựa trên kết quả đã tra cứu từ search_course_kb
+      và đính kèm nguồn trích dẫn rõ ràng.
+    parameters:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: "Mã định danh tin nhắn học viên cần trả lời"
+        student_id:
+          type: string
+          description: "Mã định danh hoặc tên của học viên để tag mention"
+        draft_content:
+          type: string
+          description: "Nội dung phản hồi chi tiết, ngắn gọn, thân thiện và có căn cứ"
+        citation:
+          type: string
+          description: "Nguồn tham chiếu quy chế chính thức (ví dụ: 'Quy chế chuyên cần §3.2')"
+      required: [message_id, student_id, draft_content]
+
+  - name: escalate_authority
+    description: >-
+      Chuyển tiếp câu hỏi lên Giảng viên hoặc Ban Tổ Chức (BTC) khi yêu cầu vượt quá
+      thẩm quyền của Trợ giảng (như xin gia hạn deadline riêng, khiếu nại điểm số,
+      yêu cầu giải bài thi/quiz portal có tính điểm).
+    parameters:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: "Mã tin nhắn cần leo thang"
+        reason:
+          type: string
+          description: "Lý do chuyển tiếp (ví dụ: 'Vượt thẩm quyền TA — Yêu cầu gia hạn bài lab')"
+        target_role:
+          type: string
+          description: "Đơn vị hoặc vai trò tiếp nhận xử lý"
+          enum: [instructor, btc, head_ta]
+      required: [message_id, reason, target_role]
+
+  - name: post_discord_reply
+    description: >-
+      Hành động ghi (Write Action): Gửi câu trả lời đã được Trợ giảng xem xét và duyệt
+      lên kênh Discord khoá học, tự động tag đúng học viên bằng message_reference.
+      BẢO VỆ 2 LỚP: BẮT BUỘC tham số confirmed phải bằng true.
+    parameters:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: "Mã tin nhắn gốc trên Discord cần reply vào"
+        reply_content:
+          type: string
+          description: "Nội dung phản hồi cuối cùng gửi lên Discord"
+        confirmed:
+          type: boolean
+          description: "Xác nhận rõ ràng từ Trợ giảng trước khi thực hiện hành động ghi (Bắt buộc: true)"
+          default: false
+      required: [message_id, reply_content, confirmed]
