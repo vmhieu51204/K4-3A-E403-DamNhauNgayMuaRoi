@@ -8,10 +8,10 @@
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-| Vũ Minh Hiếu | 2A202602779 | Nhóm trưởng |  |
-| Dương Minh Hiếu | 2A202602488 |  |  |
-| Nguyễn Đình Phúc | 2A202602953 |  |  |
-| Đoàn Tuấn Long | 2A202602609 |  |  |
+| Vũ Minh Hiếu | 2A202602779 | Nhóm trưởng | Phân chia công việc và đồng bộ giữa các thành viên, hoàn thành các tài liệu |
+| Dương Minh Hiếu | 2A202602488 | Thiết kế eval, ui | Tạo bộ eval gồm các test case được chia theo các trường hợp, implement ui  |
+| Nguyễn Đình Phúc | 2A202602953 | LLM API, prompt | Thiết kế hệ thống LLM API, tool calling, prompt engineering. Kiểm thử và tối ưu hệ thống |
+| Đoàn Tuấn Long | 2A202602609 | Kiểm thử hệ thống, tạo slide và video demo | Chạy và kiểm tra các chức năng của hệ thống, chuẩn bị slide báo cáo và video demo |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
 

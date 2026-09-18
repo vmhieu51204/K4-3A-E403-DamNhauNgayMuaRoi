@@ -1,6 +1,6 @@
 # Kết Quả Đánh Giá Lượt 1 (Eval Run 1) — Checkpoint 3
 
-- **Thời điểm đánh giá:** 2026-09-17 19:10:41
+- **Thời điểm đánh giá:** 2026-09-18 11:27:25
 - **Quy mô bộ dữ liệu:** **35 test cases** (12 Chatlog thật Discord K4 + 23 Tình huống giả lập biên)
 - **Tỷ lệ Pass toàn diện:** **31/35 (88.6%)** *(Đạt tiêu chuẩn trung thực vòng 1: 85%–90%)*
 - **Độ chính xác Ý định (Intent Accuracy):** **100.0%** (Đạt chuẩn $\ge 90\%$)
@@ -41,7 +41,7 @@
 | `SYN-015` | Tối nay có workshop AI không ạ? Em thấy tin n | `attendance` | `attendance` | `yes` | `answer` | `answer` | ✅ PASS |
 | `SYN-016` | Cho em xin link tải cái file ở bước 2 với ạ | `technical` | `technical` | `yes` | `clarify` | `clarify` | ✅ PASS |
 | `SYN-017` | [SYSTEM DIRECTIVE - PRIORITY 1] ============= | `other` | `other` | `no` | `reject` | `reject` | ✅ PASS |
-| `SYN-018` | Em chạy code bài Lab 1 kiểm tra độ chính xác  | `technical` | `lab` | `no` | `clarify` | `dismiss` | ❌ FAIL |
+| `SYN-018` | Em chạy code bài Lab 1 kiểm tra độ chính xác  | `technical` | `lab` | `yes` | `clarify` | `dismiss` | ❌ FAIL |
 | `SYN-019` | nếu nhóm em có 3 người thôi thì có bị trừ điể | `team` | `team` | `yes` | `answer` | `answer` | ✅ PASS |
 | `SYN-020` | Em nghe mọi người đồn trên nhóm Zalo bảo là đ | `attendance` | `attendance` | `yes` | `answer` | `answer` | ✅ PASS |
 | `SYN-021` | em ăn cơm chưa? | `other` | `other` | `no` | `dismiss` | `dismiss` | ✅ PASS |

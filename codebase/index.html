@@ -124,29 +124,29 @@
 ---
 ### 📌 1. ĐIỂM DANH & WORKSHOP
 • **[M69081]** `D2313` (#channel_02 · trôi 24.2h): *"có điểm danh ws không ạ"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M69081'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M69081'))
 
 • **[M63574]** `D3082` (#channel_02 · trôi 25.2h): *"buổi workshop chủ nhật ngày mai thì có tính vào số buổi nghỉ ko ạ?..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M63574'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M63574'))
 
 ---
 ### 💻 2. LAB & DEADLINE
 • **[M15902]** `D4412` (#channel_05 · trôi 7.4h): *"Cho em hỏi hạn nộp bài Lab 1 chính xác là mấy giờ tối nay ạ?..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M15902'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M15902'))
 
 • **[M33885]** `D3923` (#channel_02 · trôi 5.2h): *"vào mà cứ bị out ra thì phải làm sao ạ :v"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M33885'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M33885'))
 
 • **[M78210]** `D6109` (#channel_03 · trôi 4.8h): *"Mình không tìm thấy file requirements.txt trong repo mẫu..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M78210'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M78210'))
 
 ---
 ### 👥 3. GHÉP ĐỘI & TEAM
 • **[M99769]** `D1224` (#channel_02 · trôi 17.4h): *"cho mình hỏi một team mấy bạn?"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M99769'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M99769'))
 
 • **[M67317]** `D3389` (#channel_02 · trôi 14.5h): *"2b vs 2a vẫn join chung được luôn ạ ?"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M67317'))
+  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M67317'))
         </div>
       </div>
     </div>
@@ -178,11 +178,16 @@
           <span class="text-[11px] text-slate-400">Tự động reply vào tin nhắn gốc</span>
         </div>
         <textarea id="discord-reply-input" rows="2" class="w-full bg-[#383a40] text-white rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none border-none resize-none"></textarea>
-        <div class="flex justify-end space-x-2 pt-1">
-          <button onclick="closeDiscordModal()" class="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Đóng</button>
-          <button onclick="submitDiscordModalReply()" class="px-4 py-1.5 rounded text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5">
-            <span>🚀 Gửi Reply &amp; Đóng Case</span>
-          </button>
+        <div class="flex justify-between items-center pt-1">
+          <a id="modal-discord-link" href="#" target="_blank" class="text-xs text-[#5865F2] hover:text-[#4752C4] font-medium flex items-center gap-1">
+            Mở trên Discord App ↗
+          </a>
+          <div class="flex space-x-2">
+            <button onclick="closeDiscordModal()" class="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Đóng</button>
+            <button onclick="submitDiscordModalReply()" class="px-4 py-1.5 rounded text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5">
+              <span>🚀 Gửi Reply &amp; Đóng Case</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -276,14 +281,19 @@
               </button>
               
               <div class="flex items-center space-x-2">
-                <!-- NÚT MOVE TỚI DISCORD -->
-                <button onclick="openDiscordModal('${q.id}')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1 border border-slate-700 active:scale-95" title="Di chuyển tới Discord để xem ngữ cảnh tin nhắn trước và sau">
-                  <span>🔗 Move tới Discord</span>
+                <!-- NÚT XEM THREAD TẠI CHỖ (MODAL) -->
+                <button onclick="openDiscordModal('${q.id}')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1 border border-slate-700 active:scale-95" title="Xem ngữ cảnh tin nhắn trước và sau">
+                  <span>💬 Xem Thread</span>
                 </button>
+                
+                <!-- NÚT MỞ TRÊN DISCORD APP -->
+                <a href="https://discord.com/channels/${q.guild}/${q.channel}/${q.id}" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#5865F2] hover:bg-[#4752C4] text-white transition flex items-center gap-1 shadow-sm active:scale-95" title="Mở trực tiếp trên ứng dụng Discord">
+                  <span>🔗 Tới Discord</span>
+                </a>
 
                 <!-- NÚT GỬI REPLY TRỰC TIẾP -->
-                <button onclick="sendReply('${q.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95">
-                  <span>🚀 Gửi Reply &amp; Đóng Case</span>
+                <button onclick="sendReply('${q.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95 ml-2">
+                  <span>🚀 Reply &amp; Đóng Case</span>
                 </button>
               </div>
             </div>
@@ -364,6 +374,9 @@
 
       const editedDraft = document.getElementById(`reply-text-${id}`)?.value || q.aiSuggestedReply;
       document.getElementById('discord-reply-input').value = editedDraft;
+      
+      const realDiscordUrl = `https://discord.com/channels/${q.guild}/${q.channel}/${q.id}`;
+      document.getElementById('modal-discord-link').href = realDiscordUrl;
 
       document.getElementById('discord-modal').classList.remove('hidden');
     }

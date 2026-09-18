@@ -1,0 +1,15 @@
+# Dependencies for TA Copilot AI Agent Architecture
+# Core LLM SDKs
+openai>=1.12.0
+
+# Schema & Parsing
+PyYAML>=6.0
+
+# Optional UI & Utilities
+requests>=2.31.0
+streamlit>=1.30.0
+
+# API Server (Frontend integration)
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.4
