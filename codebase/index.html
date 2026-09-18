@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 <html lang="vi">
-<<<<<<< Updated upstream
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,28 +115,3 @@
 </body>
 </html>
 
-=======
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#020617"><title>TA Copilot — Quản lý câu hỏi Discord</title><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script></head>
-<body>
-<header class="topbar"><div class="header-inner"><a class="brand" href="./"><span class="brand-mark">TA</span><div><h1>TA Copilot <span>Track B2</span></h1><p>Điều phối câu hỏi tồn &gt;4h · Trả lời nhanh hoặc xem ngữ cảnh Discord</p></div></a><div class="header-status"><span class="status-dot"></span><span>Local sync · support inbox</span></div><div class="header-actions"><nav class="view-toggle" aria-label="Chế độ xem"><button data-view="pending" class="active">Danh Sách</button><button data-view="feed">Bản Tin Feed</button></nav><button class="button scan-button" id="scan-button">⚡ Đọc lại dữ liệu</button></div></div></header>
-<main>
-<div class="scan-progress" id="scan-progress" hidden><div></div></div>
-<section class="stats" aria-label="Tổng quan câu hỏi">
-<article class="stat"><div>Tổng Câu Hỏi Tồn</div><div class="stat-bottom"><strong id="stat-total">0</strong><span class="pill purple">Cần xử lý</span></div></article>
-<article class="stat critical-stat"><div>Báo Động SLA (≥24h)</div><div class="stat-bottom"><strong id="stat-critical">0</strong><span class="pill red">Khẩn cấp</span></div></article>
-<article class="stat warning-stat"><div>Tồn Đọng (4h – 24h)</div><div class="stat-bottom"><strong id="stat-warning">0</strong><span class="pill orange">Chờ giải đáp</span></div></article>
-<article class="stat resolved-stat"><div>Đã Xử Lý Trong Ca</div><div class="stat-bottom"><strong id="stat-resolved">0</strong><span class="pill green">Hoàn thành</span></div></article>
-</section>
-<div class="ai-notice"><strong>HAX G1 · TA giữ quyền quyết định.</strong> Hỗ trợ phát hiện câu hỏi tồn &gt;4h và điều hướng; không tự quyết định hay gửi phản hồi. Bản local dùng nhãn đối chiếu, chưa chạy AI tự động.</div>
-<details class="source-banner"><summary id="source-summary">Đang đọc thư mục dữ liệu...</summary><p id="source-detail"></p></details>
-<div id="data-error" class="data-error" role="alert" hidden></div>
-<nav class="status-tabs" aria-label="Trạng thái câu hỏi"><button data-view="pending" class="active">Đang chờ <b id="nav-count">0</b></button><button data-view="awaiting">Chờ làm rõ <b id="awaiting-nav">0</b></button><button data-view="resolved">Đã xử lý <b id="resolved-nav">0</b></button><button data-view="answered">Có phản hồi trong nguồn <b id="answered-nav">0</b></button><button data-view="dismissed">Đã bỏ qua <b id="dismissed-nav">0</b></button></nav>
-<section id="inbox"><div class="inbox-heading"><div><h2 id="list-title">Hộp thư câu hỏi</h2><p id="list-description"></p></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Tìm câu hỏi, học viên..." aria-label="Tìm câu hỏi"><kbd>/</kbd></label></div>
-<div class="filter-row"><div id="topic-filters" class="topic-filters" aria-label="Lọc chủ đề"></div><select id="sort" aria-label="Sắp xếp"><option value="longest">Chờ lâu nhất</option><option value="newest">Mới nhất</option></select></div>
-<div class="question-list" id="questions-container" data-hax="G2 G10 G11 G9 G8"></div><footer class="list-footer"><span id="result-count"></span><span>Phản hồi lưu trong phiên · chưa gửi Discord</span></footer></section>
-<section id="feed-panel" class="feed-panel" hidden><div class="inbox-heading"><div><h2>Bản tin Discord</h2><p>Tổng hợp cho kênh #ta-internal</p></div><button class="button primary" id="copy-feed">Sao chép bản tin</button></div><pre id="feed-text"></pre><div class="report-toolbar"><button class="button" id="show-reports" aria-expanded="false" aria-controls="original-report">Xem / ẩn bản tin bot gốc</button><span>k4_daily_reports.md</span></div><pre id="original-report" hidden></pre></section>
-<footer class="page-footer">TA Copilot · <span id="breadcrumb">Hộp thư câu hỏi</span> · CSV đã ẩn danh</footer>
-</main>
-<dialog id="reply-dialog" data-hax="G9 G10" aria-labelledby="dialog-title"><div class="dialog-top"><span>NGỮ CẢNH DISCORD · DỮ LIỆU LOCAL</span><button class="icon-button" id="close-dialog" aria-label="Đóng">×</button></div><div id="dialog-content"></div></dialog><div id="toast" role="status" hidden></div>
-</body></html>
->>>>>>> Stashed changes
