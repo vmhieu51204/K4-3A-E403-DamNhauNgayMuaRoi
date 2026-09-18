@@ -52,6 +52,7 @@ def resolve_thread_context(msg: str, ctx: str, detected_topic: str) -> dict[str,
             "topic": detected_topic,
             "expected_in_backlog": "no",
             "action": "dismiss",
+                "suggested_reply": "",
             "reason": "Học viên đã tự sửa xong trong luồng thảo luận, không đưa vào backlog"
         }
 
@@ -65,6 +66,7 @@ def resolve_thread_context(msg: str, ctx: str, detected_topic: str) -> dict[str,
             "topic": detected_topic,
             "expected_in_backlog": "no",
             "action": "dismiss",
+                "suggested_reply": "",
             "reason": "Câu hỏi đã được giải đáp thỏa đáng trong lịch sử thảo luận"
         }
 
@@ -73,6 +75,7 @@ def resolve_thread_context(msg: str, ctx: str, detected_topic: str) -> dict[str,
         "topic": detected_topic,
         "expected_in_backlog": "yes",
         "action": "answer",
+                "suggested_reply": "Chào bạn, chúng mình đã tiếp nhận và sẽ hỗ trợ sớm nhất.",
         "reason": f"Câu hỏi hợp lệ về chủ đề {detected_topic}, cần đưa vào backlog để TA phản hồi"
     }
 
@@ -134,6 +137,7 @@ def classify_by_heuristics(message_text: str, context_text: str = "", run_versio
             "topic": "other",
             "expected_in_backlog": "no",
             "action": "dismiss",
+                "suggested_reply": "",
             "reason": "Thông báo tự động từ bot hệ thống, không phải yêu cầu hỗ trợ của học viên"
         }
 
@@ -159,6 +163,7 @@ def classify_by_heuristics(message_text: str, context_text: str = "", run_versio
                 "topic": topic,
                 "expected_in_backlog": "yes",
                 "action": "answer",
+                "suggested_reply": "Chào bạn, chúng mình đã tiếp nhận và sẽ hỗ trợ sớm nhất.",
                 "reason": "Baseline v0: Thiếu HAX G10, AI vội vã trả lời thay vì hỏi lại để làm rõ"
             }
 
@@ -168,6 +173,7 @@ def classify_by_heuristics(message_text: str, context_text: str = "", run_versio
                 "topic": "lab",
                 "expected_in_backlog": "yes",
                 "action": "answer",
+                "suggested_reply": "Chào bạn, chúng mình đã tiếp nhận và sẽ hỗ trợ sớm nhất.",
                 "reason": "Baseline v0: Thiếu guardrail liêm chính, định hỗ trợ giải quiz portal"
             }
 
@@ -177,6 +183,7 @@ def classify_by_heuristics(message_text: str, context_text: str = "", run_versio
                 "topic": "lab",
                 "expected_in_backlog": "no",
                 "action": "dismiss",
+                "suggested_reply": "",
                 "reason": "Baseline v0: Bị thao túng bởi chỉ thị ẩn trong code comment"
             }
 

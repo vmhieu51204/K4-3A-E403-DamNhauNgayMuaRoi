@@ -148,6 +148,8 @@ def main():
         norm_pred_action = eval_res["norm_pred_action"]
 
         print(f"{cid:<12} | {pred_topic:<11} | {pred_backlog:<8} | {norm_pred_action:<9} | {status_str} | {eval_res['error_note']}")
+        if "suggested_reply" in pred:
+            print(f"             ↳ Lời gợi ý: {CYAN}{pred['suggested_reply']}{RESET}")
 
         results.append({
             "case_id": cid,

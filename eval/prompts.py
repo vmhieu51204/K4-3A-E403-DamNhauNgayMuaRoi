@@ -17,6 +17,7 @@ Trả về DUY NHẤT một JSON hợp lệ dạng:
   "topic": "attendance"|"lab"|"team"|"policy"|"technical"|"other",
   "expected_in_backlog": "yes"|"no",
   "action": "answer"|"clarify"|"reject"|"dismiss",
+  "suggested_reply": "Câu trả lời nháp gửi học viên",
   "reason": "Giải thích ngắn gọn 1 câu"
 }"""
 
@@ -52,5 +53,6 @@ Trả về DUY NHẤT một JSON hợp lệ:
   "topic": "attendance"|"lab"|"team"|"policy"|"technical"|"other",
   "expected_in_backlog": "yes"|"no",
   "action": "answer"|"clarify"|"reject"|"dismiss",
+  "suggested_reply": "Câu trả lời nháp gửi học viên, hoặc câu hỏi để làm rõ thông tin",
   "reason": "Giải thích ngắn gọn 1 câu"
 }"""
