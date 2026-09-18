@@ -1,0 +1,67 @@
+# Domain Ontology — Phạm vi nghiệp vụ TA Copilot K4
+# Quản lý tập trung phạm vi từng chủ đề. Khi cần mở rộng hoặc chỉnh sửa nghiệp vụ,
+# chỉ cần hiệu chỉnh cấu hình tại đây mà không cần viết lại logic code.
+
+domains:
+  policy:
+    title: "Quy chế & Học vụ"
+    description: "Quy định sổ tay sinh viên, điều kiện qua môn, miễn nộp, thủ tục giấy tờ."
+    concept_signals:
+      - "sổ tay"
+      - "quy chế"
+      - "qua môn"
+      - "miễn nộp"
+      - "zoom là ai nhắn bot"
+
+  attendance:
+    title: "Chuyên cần & Lịch học"
+    description: "Lịch học, workshop, điểm danh, vắng mặt, bù giờ, giới hạn vắng."
+    concept_signals:
+      - "workshop"
+      - "ws"
+      - "điểm danh"
+      - "vắng"
+      - "nghỉ"
+      - "chuyên cần"
+      - "cấm thi"
+      - "muộn quá 15 phút"
+      - "lịch"
+
+  team:
+    title: "Tổ chức & Ghép đội"
+    description: "Thủ tục lập nhóm, ghép đội, đổi nhóm, liên ban 2a/2b, quy định sĩ số."
+    concept_signals:
+      - "team"
+      - "nhóm"
+      - "ghép"
+      - "lập đội"
+      - "chốt team"
+      - "2a"
+      - "2b"
+      - "liên ban"
+      - "sĩ số"
+      - "3 người"
+
+  technical:
+    title: "Sự cố Hạ tầng Kỹ thuật"
+    description: "Lỗi kết nối mạng, VPN, login, crash phần mềm, out Zoom/Phoenix, lỗi CUDA."
+    concept_signals:
+      - "connectionrefused"
+      - "vpn"
+      - "bị out"
+      - "không vào được"
+      - "đăng nhập"
+      - "mạng"
+      - "cuda"
+      - "lỗi"
+
+  lab:
+    title: "Bài tập Thực hành & Đánh giá"
+    description: "Nội dung bài lab, thời hạn nộp lab, mã nguồn, nộp bài portal/slide."
+    concept_signals:
+      - "lab"
+      - "bài tập"
+      - "hạn nộp"
+      - "nộp bài"
+      - "portal ghi"
+      - "slide ghi"
