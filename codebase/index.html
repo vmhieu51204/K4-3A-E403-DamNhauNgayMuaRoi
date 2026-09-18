@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TA Copilot — Quản Lý & Điều Phối Câu Hỏi Discord</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com">
+
+
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
@@ -179,7 +182,7 @@
         </div>
         <textarea id="discord-reply-input" rows="2" class="w-full bg-[#383a40] text-white rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none border-none resize-none"></textarea>
         <div class="flex justify-between items-center pt-1">
-          <a id="modal-discord-link" href="#" target="_blank" class="text-xs text-[#5865F2] hover:text-[#4752C4] font-medium flex items-center gap-1">
+          <a id="modal-discord-link" href="#" onclick="openDiscordDemo(event)" class="text-xs text-[#5865F2] hover:text-[#4752C4] font-medium flex items-center gap-1">
             Mở trên Discord App ↗
           </a>
           <div class="flex space-x-2">
@@ -199,12 +202,21 @@
   </div>
 
   <!-- JAVASCRIPT LOGIC -->
-  <script src="data/mock_questions.js"></script>
+  <script src="data/mock_questions.js">
+
+
+  </script>
   <script>
     let activeQuestions = [...MOCK_QUESTIONS];
     let resolvedCount = 0;
     let currentTopic = 'all';
     let currentTargetId = null;
+
+
+    function openDiscordDemo(e) {
+      if(e) e.preventDefault();
+      alert("Tính năng này giúp TA có thể nhảy thẳng vào ứng dụng Discord để xem ngữ cảnh thực tế của học viên.\n\nTuy nhiên, để tuân thủ quy định Bảo mật dữ liệu của Ban tổ chức AI20K (Không truy cập server thật), nút này hiện chỉ mang tính chất Demo mô phỏng.");
+    }
 
     function renderQuestions() {
       const container = document.getElementById('questions-container');
@@ -271,7 +283,7 @@
                 <span class="font-medium text-indigo-400">💬 Soạn câu trả lời (Sẽ Reply trực tiếp vào tin nhắn trên #${q.channel}):</span>
                 <span class="text-slate-500">Tự động tag @${q.author}</span>
               </div>
-              <textarea id="reply-text-${q.id}" rows="2" class="w-full bg-slate-950/90 text-slate-200 text-xs rounded-lg p-2.5 border border-slate-800 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed" placeholder="Nhập câu trả lời cho học viên...">${q.aiSuggestedReply}</textarea>
+              <textarea id="reply-text-${q.id}" rows="2" class="w-full bg-slate-950/90 text-slate-200 text-xs rounded-lg p-2.5 border border-slate-800 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed" placeholder="Nhập câu trả lời cho học viên...">${q.aiSuggestedReply || ""}</textarea>
             </div>
 
             <!-- Action Buttons: Move to Discord + Send Reply -->
@@ -287,9 +299,9 @@
                 </button>
                 
                 <!-- NÚT MỞ TRÊN DISCORD APP -->
-                <a href="https://discord.com/channels/${q.guild}/${q.channel}/${q.id}" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#5865F2] hover:bg-[#4752C4] text-white transition flex items-center gap-1 shadow-sm active:scale-95" title="Mở trực tiếp trên ứng dụng Discord">
+                <button onclick="openDiscordDemo(event)" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#5865F2] hover:bg-[#4752C4] text-white transition flex items-center gap-1 shadow-sm active:scale-95" title="Mở trực tiếp trên ứng dụng Discord">
                   <span>🔗 Tới Discord</span>
-                </a>
+                </button>
 
                 <!-- NÚT GỬI REPLY TRỰC TIẾP -->
                 <button onclick="sendReply('${q.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95 ml-2">
@@ -442,6 +454,9 @@
 
     // Initial render
     renderQuestions();
+  
+
+
   </script>
 </body>
 </html>
