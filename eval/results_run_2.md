@@ -1,6 +1,6 @@
 # Kết Quả Đánh Giá Lượt 2 (Eval Run 2 — Tối Ưu Hóa) — Checkpoint 4
 
-- **Thời điểm đánh giá:** 2026-09-17 19:35:57
+- **Thời điểm đánh giá:** 2026-09-18 11:28:11
 - **Quy mô bộ dữ liệu:** **35 test cases** (12 Chatlog thật Discord K4 + 23 Tình huống giả lập biên)
 - **Tỷ lệ Pass toàn diện:** **35/35 (100.0%)** *(Đạt chuẩn xuất sắc vượt Quality Bar)*
 - **Độ chính xác Ý định (Intent Accuracy):** **100.0%**

@@ -26,3 +26,5 @@ venv/
 env/
 
 huong_dan/
+transcripts/
+runs/
