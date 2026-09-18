@@ -271,7 +271,7 @@
                 <span class="font-medium text-indigo-400">💬 Soạn câu trả lời (Sẽ Reply trực tiếp vào tin nhắn trên #${q.channel}):</span>
                 <span class="text-slate-500">Tự động tag @${q.author}</span>
               </div>
-              <textarea id="reply-text-${q.id}" rows="2" class="w-full bg-slate-950/90 text-slate-200 text-xs rounded-lg p-2.5 border border-slate-800 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed" placeholder="Nhập câu trả lời cho học viên...">${q.aiSuggestedReply}</textarea>
+              <textarea id="reply-text-${q.id}" rows="2" class="w-full bg-slate-950/90 text-slate-200 text-xs rounded-lg p-2.5 border border-slate-800 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed" placeholder="Nhập câu trả lời cho học viên...">${q.aiSuggestedReply || ""}</textarea>
             </div>
 
             <!-- Action Buttons: Move to Discord + Send Reply -->
