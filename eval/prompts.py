@@ -21,7 +21,7 @@ Trả về DUY NHẤT một JSON hợp lệ dạng:
   "reason": "Giải thích ngắn gọn 1 câu"
 }"""
 
-PROMPT_V1 = """Bạn là trợ lý AI đánh giá tin nhắn cho hệ thống TA Copilot của khoá học AI Thực Chiến (Phiên bản v1 tối ưu — Checkpoint 4).
+PROMPT_V2 = """Bạn là trợ lý AI đánh giá tin nhắn cho hệ thống TA Copilot của khoá học AI Thực Chiến (Phiên bản v2 tối ưu — Cải tiến dựa trên nhu cầu thực tế của TA).
 Nhiệm vụ: Phân loại tin nhắn học viên để quyết định đưa vào hàng đợi giải đáp cho Trợ giảng (TA).
 
 CÁC LUẬT RÀO CHẮN BẢO VỆ BẮT BUỘC (GUARDRAILS V1):

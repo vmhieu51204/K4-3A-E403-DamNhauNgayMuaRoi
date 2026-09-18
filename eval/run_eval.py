@@ -16,7 +16,7 @@ from providers import make_provider
 
 # Eval Module Imports
 from eval.data_loader import find_k4_messages, load_csv_lookup, load_all_cases
-from eval.prompts import PROMPT_V0, PROMPT_V1
+from eval.prompts import PROMPT_V0, PROMPT_V2
 from eval.classify_engine import classify_by_heuristics, normalize_action
 from eval.evaluator import evaluate_case
 from eval.reporter import export_markdown_report
@@ -30,7 +30,7 @@ RESET  = "\033[0m"
 
 def call_llm(message_text: str, context_text: str = "", run_version: int = 2) -> dict:
     """Gửi câu hỏi qua Provider Layer."""
-    system_prompt = PROMPT_V1 if run_version == 2 else PROMPT_V0
+    system_prompt = PROMPT_V2 if run_version == 2 else PROMPT_V0
     if run_version == 2:
         user_content = f"<student_message>\n{message_text}\n</student_message>"
     else:
