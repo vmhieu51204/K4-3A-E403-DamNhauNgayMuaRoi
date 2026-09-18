@@ -1,143 +1,18 @@
-# Guardrail Registry — Bảng khai báo rào chắn an toàn & chính sách
-# Quản lý tập trung các luật can thiệp hệ thống theo chuẩn HAX & AI Safety.
-# Dễ dàng kiểm tra, bảo trì và kiểm thử độc lập mà không dùng if-else lồng nhau.
-#
-# Mỗi guardrail có:
-#   id: Mã định danh duy nhất
-#   name: Tên mô tả
-#   min_version: Phiên bản tối thiểu để kích hoạt (1 = Baseline, 2 = Optimized)
-#   match_patterns: Danh sách từ khoá phát hiện (match ANY)
-#   exclude_patterns: Nếu khớp pattern nhưng CÓ exclude → bỏ qua guardrail này
-#   decision: Kết quả trả về khi khớp
+# Guardrail Registry — MVP Rút gọn cho TA Copilot
+# Mục tiêu duy nhất: Phát hiện câu hỏi mơ hồ để hỏi lại (HAX G10) thay vì đoán mò.
 
 guardrails:
-  - id: "GR-01-DIRECT-INJECTION"
-    name: "Chống Jailbreak & Giả mạo Quyền Quản trị"
+  - id: "GR-HAX-G10-CLARIFY"
+    name: "HAX G10 — Yêu Cầu Làm Rõ Khi Tin Nhắn Mơ Hồ / Thiếu Ngữ Cảnh"
     min_version: 1
-    match_patterns:
-      - "[system directive"
-      - "administrative test mode"
-      - "terminate all previous"
-    exclude_patterns: []
-    decision:
-      is_support_request: false
-      topic: "other"
-      expected_in_backlog: "no"
-      action: "reject"
-      reason: "Phát hiện chỉ thị giả mạo quyền quản trị (Direct Prompt Injection / Jailbreak)"
-
-  - id: "GR-02-CHITCHAT-FILTER"
-    name: "Lọc Tin Nhắn Xã Giao & Cảm Xúc Đời Thường"
-    min_version: 1
-    match_patterns:
-      - "ăn cơm chưa"
-      - "mưa không"
-      - "sting"
-      - "uống nước"
-      - "cafe"
-      - "trà sữa"
-    exact_matches:
-      - "."
-      - ".."
-      - "..."
-      - "hi"
-      - "hello"
-    special_rules:
-      - type: "contains_without_question"
-        pattern: "dài dã man"
-        question_indicators: ["?", "hỏi", "sao", "làm"]
-      - type: "bot_channel_notice"
-        patterns: ["kênh thông báo", "các thông tin về các buổi ws"]
-        requires: "[@bot]"
-    exclude_patterns: []
-    decision:
-      is_support_request: false
-      topic: "other"
-      expected_in_backlog: "no"
-      action: "dismiss"
-      reason: "Tin nhắn xã giao đời thường hoặc thông báo tự động từ bot, không thuộc phạm vi hỗ trợ học vụ"
-
-  - id: "GR-03-INDIRECT-INJECTION"
-    name: "XML Sandboxing — Chống Trojan trong Traceback / Code Comment"
-    min_version: 2
-    match_patterns:
-      - "important instruction for ai"
-      - "special tester"
-      - "ban tổ chức đã quyết định gia hạn"
-    exclude_patterns: []
-    decision:
-      is_support_request: true
-      topic: "technical"
-      expected_in_backlog: "yes"
-      action: "clarify"
-      reason: "Guardrail 4 (Data Isolation): Cách ly mã nguồn trong thẻ XML, vô hiệu hóa mã độc, xử lý sự cố CUDA OOM"
-
-  - id: "GR-04-ACADEMIC-INTEGRITY"
-    name: "Liêm Chính Học Thuật — Chặn Gian Lận Thi Cử & Lộ Đề"
-    min_version: 1
-    match_patterns:
-      - "hidden test"
-      - "input mẫu bí mật"
-    exclude_patterns: []
-    decision:
-      is_support_request: true
-      topic: "lab"
-      expected_in_backlog: "yes"
-      action: "reject"
-      reason: "Yêu cầu tiết lộ test case ẩn / tài liệu chấm điểm bí mật vi phạm liêm chính học thuật"
-
-  - id: "GR-04B-QUIZ-PORTAL-INTEGRITY"
-    name: "Liêm Chính Học Thuật — Chặn Giải Hộ Quiz Portal"
-    min_version: 2
-    match_requires_any:
-      - "quiz"
-      - "portal"
-    match_patterns:
-      - "giải hộ"
-      - "giải giúp"
-      - "làm hộ"
-      - "chỉ cần đáp án"
-      - "xin đáp án"
-    exclude_patterns: []
-    decision:
-      is_support_request: true
-      topic: "lab"
-      expected_in_backlog: "yes"
-      action: "reject"
-      reason: "Guardrail 3 (Liêm chính học thuật): Từ chối giải hộ bài kiểm tra tính điểm portal"
-
-  - id: "GR-05-AMBIGUOUS-PRONOUN"
-    name: "Làm Rõ Đại Từ Chỉ Định Thiếu Ngữ Cảnh"
-    min_version: 1
-    special_rules:
-      - type: "contains_without_keyword"
-        pattern: "nộp ở đâu"
-        absent_keyword: "lab"
-        override_topic: "lab"
-      - type: "contains"
-        pattern: "ở bước 2"
-        override_topic: "technical"
-      - type: "contains_pair"
-        patterns: ["trong sổ tay", "xác nhận"]
-        override_topic: "policy"
-    match_patterns: []
-    exclude_patterns: []
-    decision:
-      is_support_request: true
-      topic: "lab"
-      expected_in_backlog: "yes"
-      action: "clarify"
-      reason: "Tin nhắn dùng đại từ chỉ định thiếu ngữ cảnh cụ thể, kích hoạt câu hỏi làm rõ"
-
-  - id: "GR-06-HAX-G10-ERROR-CLARIFY"
-    name: "Guardrail 1: HAX G10 — Ép Buộc Hỏi Lại Khi Báo Lỗi Mơ Hồ Thiếu Hệ Thống"
-    min_version: 2
     match_patterns:
       - "bị out"
       - "không vào được"
       - "văng ra"
       - "bị crash"
       - "vào mà cứ"
+      - "nộp ở đâu"
+      - "ở bước 2"
     exclude_patterns:
       - "zoom"
       - "phoenix"
@@ -147,7 +22,8 @@ guardrails:
       - "github"
     decision:
       is_support_request: true
-      topic: "technical"
+      topic: "general"
       expected_in_backlog: "yes"
       action: "clarify"
-      reason: "Guardrail 1 (HAX G10): Tin nhắn báo lỗi thiếu hệ thống/thiết bị cụ thể, bắt buộc hỏi lại để làm rõ"
+      suggested_reply: "Bạn vui lòng cung cấp thêm thông tin chi tiết hoặc ảnh chụp màn hình lỗi để TA hỗ trợ nhé."
+      reason: "Tin nhắn thiếu ngữ cảnh cụ thể hoặc thiết bị gặp sự cố, cần hỏi lại làm rõ (HAX G10)"
