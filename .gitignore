@@ -28,3 +28,6 @@ env/
 huong_dan/
 transcripts/
 runs/
+
+# Local evaluation outputs may contain model-generated source excerpts.
+eval/results/
