@@ -1,14 +1,28 @@
-﻿"""Local TA workspace. Reads private data at runtime; never copies it into UI assets."""
+"""Local TA workspace. Reads private data at runtime; never copies it into UI assets."""
 import argparse
 import csv
 import json
+import sys
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 WEB = ROOT / 'codebase'
 PACK = ROOT / 'data' / 'discord-pack'
+if not PACK.exists() and (ROOT / 'data').exists():
+    PACK = ROOT / 'data'
+
+try:
+    from codebase.mvp_ai import generate_mvp_reply
+except ImportError:
+    try:
+        from mvp_ai import generate_mvp_reply
+    except ImportError:
+        generate_mvp_reply = None
 
 
 def timestamp(value):
@@ -41,6 +55,17 @@ def load_workspace():
             return matches[0]
         source = lookup(case['source_msg_id'])
         context = [lookup(mid) for mid in info['context_message_ids']]
+        ctx_str = '\n'.join(f"[{m['author']}]: {m['content']}" for m in context)
+        evidence_texts = [m['content'] for m in context if m['msg_id'] in label.get('answer_evidence_ids', [])]
+        prev_ans = '\n'.join(evidence_texts) if evidence_texts else None
+
+        ai_out = generate_mvp_reply(
+            student_question=source['content'],
+            thread_context=ctx_str,
+            previous_answer=prev_ans
+        ) if generate_mvp_reply else {}
+        ai_reply = ai_out.get('suggested_reply', '')
+        chosen_draft = ai_reply if ai_reply else drafts.get(label['expected_action'], '')
         questions.append({
             'id': source['msg_id'], 'author': source['author'], 'channel': source['channel'],
             'guild': source['guild'], 'content': source['content'], 'createdAt': source['created_at_vn'],
@@ -49,7 +74,9 @@ def load_workspace():
             'status': 'pending' if label['expected_in_backlog'] == 'yes' else 'answered',
             'answerStatus': label['answer_status'], 'reason': label['reason'],
             'caution': label['must_not'], 'layers': label['difficulty_layers'],
-            'draft': drafts.get(label['expected_action'], ''), 'context': context,
+            'draft': chosen_draft,
+            'aiSuggestedReply': ai_reply,
+            'context': context,
             'evidenceIds': label['answer_evidence_ids'],
         })
     return {'questions': questions, 'meta': {
@@ -69,8 +96,22 @@ class Handler(BaseHTTPRequestHandler):
             if path == '/api/workspace':
                 body = json.dumps(load_workspace(), ensure_ascii=False).encode('utf-8')
                 mime = 'application/json; charset=utf-8'
-            elif path == '/api/reports':
-                body = json.dumps({'text': (PACK / 'k4_daily_reports.md').read_text(encoding='utf-8-sig')}, ensure_ascii=False).encode('utf-8')
+            elif path == '/api/ai_draft':
+                import urllib.parse
+                qs = urllib.parse.parse_qs(self.path.split('?', 1)[1] if '?' in self.path else '')
+                text = qs.get('text', [''])[0]
+                ctx = qs.get('ctx', [''])[0]
+                prev = qs.get('prev', [None])[0]
+                res = generate_mvp_reply(text, ctx, prev) if generate_mvp_reply else {}
+                body = json.dumps(res, ensure_ascii=False).encode('utf-8')
+                mime = 'application/json; charset=utf-8'
+            elif path == '/api/resolve':
+                import urllib.parse
+                qs = urllib.parse.parse_qs(self.path.split('?', 1)[1] if '?' in self.path else '')
+                msg_id = qs.get('id', [''])[0]
+                reply_text = qs.get('reply', [''])[0]
+                print(f"[TA COPILOT] 🚀 Gửi phản hồi tin nhắn {msg_id}: {reply_text[:80]}", flush=True)
+                body = json.dumps({'status': 'success', 'id': msg_id, 'reply': reply_text}, ensure_ascii=False).encode('utf-8')
                 mime = 'application/json; charset=utf-8'
             elif path in ('/', '/index.html', '/styles.css', '/app.js'):
                 name = 'index.html' if path == '/' else path[1:]

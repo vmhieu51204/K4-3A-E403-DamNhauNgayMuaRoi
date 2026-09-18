@@ -559,7 +559,13 @@ select {
 }
 
 .question-card.critical {
-  border-color: rgba(251, 113, 133, 0.24);
+  border: 1.5px solid #ef4444 !important;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.12);
+}
+
+.question-card.warning {
+  border: 1.5px solid #f97316 !important;
+  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.1);
 }
 
 .question-meta {
