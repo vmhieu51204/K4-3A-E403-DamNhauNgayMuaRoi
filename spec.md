@@ -114,16 +114,18 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
 
 ### §4b. Nguyên Tắc HAX / PAIR Áp Dụng Trong Prototype:
 
-| Nguyên tắc | Mô tả nguyên tắc | Vị trí áp dụng cụ thể trong Prototype (`codebase/index.html`) |
-|---|---|---|
-| **HAX G1** | Làm rõ hệ thống làm được gì | Banner màu chàm ở ngay đầu trang: Nêu rõ hệ thống chỉ phát hiện câu hỏi chưa giải đáp >4h và hỗ trợ điều hướng cho TA, không thay thế hoàn toàn TA. |
-| **HAX G2** | Làm rõ hệ thống làm tốt đến đâu | Huy hiệu độ tin cậy (`Độ tin cậy: 96%`, `75%`) hiển thị trực tiếp trên từng thẻ câu hỏi để TA biết mức độ chắc chắn của AI. |
-| **HAX G10** | Thu hẹp phạm vi khi nghi ngờ | Với các câu hỏi mơ hồ (như M33885 "bị out ra"), AI gắn cờ cảnh báo *"Câu hỏi mơ hồ - Cần hỏi lại"* và gợi ý câu hỏi làm rõ thay vì tự ý kết luận. |
-| **HAX G11** | Giải thích vì sao | Mục *"AI Reasoning"* trên mỗi thẻ: Giải thích lý do vì sao AI xếp vào chủ đề này và vì sao đánh giá là câu hỏi bị bỏ sót. |
-| **HAX G9** | Sửa dễ dàng | Hộp thoại *"Gợi ý câu trả lời cho TA"*: TA có thể nhấp chuột vào sửa câu chữ trực tiếp trong ô textarea trước khi bấm gửi. |
-| **HAX G8** | Gạt bỏ dễ dàng | Nút *"✕ Bỏ qua"* trên mỗi thẻ câu hỏi giúp TA lập tức loại bỏ các tin nhắn đùa vui/tán gẫu mà AI nhận diện nhầm. |
+Sáu nguyên tắc dưới đây được thể hiện ở `codebase/index.html` và phần render trong `codebase/app.js`. Bản local đọc CSV và nhãn nháp; chưa gọi AI hoặc gửi tin Discord.
 
----
+| Nguyên tắc | Mục đích | Vị trí và hành vi hiện tại |
+|---|---|---|
+| **HAX G1** | Làm rõ khả năng | Banner đầu Dashboard nêu phạm vi câu hỏi tồn >4 giờ, hỗ trợ điều hướng và TA quyết định; nói rõ bản local dùng nhãn đối chiếu, không tự gửi phản hồi. |
+| **HAX G2** | Làm rõ độ tin cậy | Mỗi thẻ có huy hiệu **Độ tin cậy: chưa có điểm AI**. CSV/nhãn chưa cung cấp confidence nên không tự gán 96% hoặc 75%. Chỉ hiển thị phần trăm khi có nguồn điểm thực và diễn giải phù hợp. |
+| **HAX G10** | Thu hẹp khi nghi ngờ | Các case thuộc lớp mơ hồ có cảnh báo **Mơ hồ — cần hỏi lại**. M33885 dùng bản nháp hỏi ứng dụng (Zoom, Phoenix hay ứng dụng khác), thiết bị và thông báo lỗi. Nút lưu chỉ chuyển sang **Chờ làm rõ**, không đóng thành đã xử lý. |
+| **HAX G11** | Giải thích vì sao | Khung **AI Reasoning** mở được ngay trên mỗi thẻ và trong modal: lý do chủ đề, tình trạng phản hồi, mã bằng chứng và mốc đánh giá. Ghi rõ giải thích lấy từ nhãn đối chiếu/mẫu, không giả là suy luận AI vừa tạo. |
+| **HAX G9** | Sửa dễ dàng | Nút **Xem & trả lời** mở modal ngữ cảnh CSV. TA sửa trực tiếp textarea; bản nháp giữ lại khi đóng/mở trong phiên. Pack không có Jump URL thật; lưu local chưa gửi Discord. |
+| **HAX G8** | Gạt bỏ dễ dàng | **✕ Bỏ qua** trên thẻ đang chờ chuyển câu sang mục Đã bỏ qua chỉ bằng một click; có thể đưa lại hộp thư, không xóa nguồn. |
+
+**Demo CP6:** mở M33885 để chỉ G10 (hỏi lại, không đoán giải pháp); sửa bản nháp để chỉ G9; mở AI Reasoning để chỉ G11 (lý do và bằng chứng). Lưu câu làm rõ rồi chỉ mục Chờ làm rõ, số Đã xử lý không tăng. Với G2, nói rõ chưa có điểm confidence thật, không dùng phần trăm minh họa như kết quả đã đo.
 
 ## §5. Kiểu Lỗi — 4 Lớp Chỗ Khó & Bảng Kịch Bản (≥8 Kịch Bản)
 
@@ -145,7 +147,7 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
 1. **Happy Path (Luồng chuẩn):**
    - AI quét tin nhắn Discord -> Phát hiện câu hỏi chưa ai trả lời >4h -> Gom nhóm đúng chủ đề -> Tạo Jump URL và gợi ý nháp -> TA mở bản tin, bấm Jump URL nhảy tới đúng tin nhắn -> TA duyệt nhanh gợi ý và bấm gửi -> Đóng case thành công trong <30 giây.
 2. **Low-Confidence Path (Mơ hồ / Thiếu thông tin - Lớp ②):**
-   - Input của học viên quá ngắn hoặc thiếu ngữ cảnh -> AI tự động hạ điểm tin cậy (<80%), gắn nhãn cảnh báo màu vàng và kích hoạt nguyên tắc HAX G10 -> Soạn nháp câu hỏi làm rõ (Clarification prompt) thay vì trả lời đoán mò -> TA duyệt gửi câu hỏi làm rõ.
+   - Input của học viên quá ngắn hoặc thiếu ngữ cảnh -> bản local hiển thị chưa có điểm AI, gắn nhãn cảnh báo màu vàng và kích hoạt nguyên tắc HAX G10 -> Soạn nháp câu hỏi làm rõ (Clarification prompt) thay vì trả lời đoán mò -> TA duyệt gửi câu hỏi làm rõ.
 3. **Failure / Không Căn Cứ Path (Lớp ①):**
    - Câu hỏi nằm ngoài tài liệu đã công bố (chưa có lịch thi hoặc chính sách mới) -> AI nhận diện thiếu căn cứ (No ground truth) -> Không hallucinate, thông báo: *"Chưa có thông tin chính thức trong tài liệu"* -> Đề xuất TA tag người phụ trách (BTC) để xin quyết định.
 4. **Correction Path (TA can thiệp & sửa đổi - HAX G9 & G8):**

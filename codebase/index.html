@@ -1,462 +1,143 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
+<<<<<<< Updated upstream
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TA Copilot — Quản Lý & Điều Phối Câu Hỏi Discord</title>
-  <script src="https://cdn.tailwindcss.com">
-
-
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .discord-msg-highlight {
-      background-color: rgba(250, 166, 26, 0.14);
-      border-left: 3px solid #faa61a;
-    }
-  </style>
+  <meta name="theme-color" content="#020617">
+  <title>TA Copilot — Quản lý câu hỏi Discord</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-
-  <!-- TOP HEADER -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow text-base">
-          TA
-        </div>
+<body>
+  <header class="topbar">
+    <div class="header-inner">
+      <a class="brand" href="./">
+        <span class="brand-mark">TA</span>
         <div>
-          <h1 class="text-base font-bold text-white flex items-center gap-2">
-            TA Copilot
-            <span class="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-normal">Track B2</span>
-          </h1>
-          <p class="text-xs text-slate-400">Điều phối câu hỏi tồn &gt;4h · Trả lời nhanh hoặc Move tới Discord</p>
+          <h1>TA Copilot <span>Track B2</span></h1>
+          <p>Điều phối câu hỏi tồn &gt;4h · Trả lời nhanh hoặc xem ngữ cảnh Discord</p>
         </div>
-      </div>
-
-      <div class="flex items-center space-x-2.5">
-        <div class="bg-slate-900 p-1 rounded-lg border border-slate-800 flex text-xs">
-          <button id="view-dashboard-btn" onclick="switchView('dashboard')" class="px-3 py-1.5 rounded-md font-medium bg-indigo-600 text-white transition">
-            Danh Sách
-          </button>
-          <button id="view-markdown-btn" onclick="switchView('markdown')" class="px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-slate-200 transition">
-            Bản Tin Feed
-          </button>
-        </div>
-
-        <button onclick="simulateAIScan()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5">
-          <span>⚡ Quét Tin</span>
-        </button>
+      </a>
+      <div class="header-status"><span class="status-dot"></span><span>Local sync · support inbox</span></div>
+      <div class="header-actions">
+        <nav class="view-toggle" aria-label="Chế độ xem">
+          <button data-view="pending" class="active">Danh Sách</button>
+          <button data-view="feed">Bản Tin Feed</button>
+        </nav>
+        <button class="button scan-button" id="scan-button">⚡ Đọc lại dữ liệu</button>
       </div>
     </div>
   </header>
 
-  <!-- SCANNING BAR -->
-  <div id="scan-bar-container" class="hidden w-full bg-slate-900 h-1">
-    <div id="scan-bar" class="bg-emerald-400 h-1 w-0 transition-all duration-700"></div>
-  </div>
+  <main>
+    <div class="scan-progress" id="scan-progress" hidden><div></div></div>
 
-  <!-- MAIN CONTENT -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-5">
+    <section class="stats" aria-label="Tổng quan câu hỏi">
+      <article class="stat"><div>Tổng Câu Hỏi Tồn</div><div class="stat-bottom"><strong id="stat-total">0</strong><span class="pill purple">Cần xử lý</span></div></article>
+      <article class="stat critical-stat"><div>Báo Động SLA (≥24h)</div><div class="stat-bottom"><strong id="stat-critical">0</strong><span class="pill red">Khẩn cấp</span></div></article>
+      <article class="stat warning-stat"><div>Tồn Đọng (4h – 24h)</div><div class="stat-bottom"><strong id="stat-warning">0</strong><span class="pill orange">Chờ giải đáp</span></div></article>
+      <article class="stat resolved-stat"><div>Đã Xử Lý Trong Ca</div><div class="stat-bottom"><strong id="stat-resolved">0</strong><span class="pill green">Hoàn thành</span></div></article>
+    </section>
 
-    <!-- KPI STATS -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-        <div class="text-xs text-slate-400">Tổng Câu Hỏi Tồn</div>
-        <div class="flex items-baseline justify-between mt-1">
-          <div id="stat-total" class="text-2xl font-bold text-white">9</div>
-          <span class="text-[11px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">Cần xử lý</span>
-        </div>
-      </div>
-      <div class="bg-slate-900 border border-rose-950 rounded-xl p-4">
-        <div class="text-xs text-rose-300">Báo Động SLA (&gt;24h)</div>
-        <div class="flex items-baseline justify-between mt-1">
-          <div id="stat-critical" class="text-2xl font-bold text-rose-400">2</div>
-          <span class="text-[11px] text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">Khẩn cấp</span>
-        </div>
-      </div>
-      <div class="bg-slate-900 border border-amber-950 rounded-xl p-4">
-        <div class="text-xs text-amber-300">Tồn Đọng (4h - 24h)</div>
-        <div class="flex items-baseline justify-between mt-1">
-          <div id="stat-warning" class="text-2xl font-bold text-amber-400">7</div>
-          <span class="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">Chờ giải đáp</span>
-        </div>
-      </div>
-      <div class="bg-slate-900 border border-emerald-950 rounded-xl p-4">
-        <div class="text-xs text-emerald-300">Đã Xử Lý Trong Ca</div>
-        <div class="flex items-baseline justify-between mt-1">
-          <div id="stat-resolved" class="text-2xl font-bold text-emerald-400">0</div>
-          <span class="text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Hoàn thành</span>
-        </div>
-      </div>
-    </div>
+    <div class="ai-notice"><strong>HAX G1 · TA giữ quyền quyết định.</strong> Hỗ trợ phát hiện câu hỏi tồn &gt;4h và điều hướng; không tự quyết định hay gửi phản hồi. Bản local dùng nhãn đối chiếu, chưa chạy AI tự động.</div>
 
-    <!-- VIEW 1: QUESTIONS LIST -->
-    <div id="view-dashboard" class="space-y-4">
-      <!-- TOPIC FILTER PILLS -->
-      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-        <div class="flex flex-wrap gap-1.5" id="topic-filters">
-          <button onclick="filterByTopic('all')" class="topic-btn active px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white">Tất cả (9)</button>
-          <button onclick="filterByTopic('attendance')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📌 Điểm danh / Workshop</button>
-          <button onclick="filterByTopic('lab')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">💻 Lab &amp; Deadline</button>
-          <button onclick="filterByTopic('team')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">👥 Ghép Đội</button>
-          <button onclick="filterByTopic('policy')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📋 Quy chế</button>
+    <details class="source-banner">
+      <summary id="source-summary">Đang đọc thư mục dữ liệu...</summary>
+      <p id="source-detail"></p>
+    </details>
+
+    <div id="data-error" class="data-error" role="alert" hidden></div>
+
+    <nav class="status-tabs" aria-label="Trạng thái câu hỏi">
+      <button data-view="pending" class="active">Đang chờ <b id="nav-count">0</b></button>
+      <button data-view="awaiting">Chờ làm rõ <b id="awaiting-nav">0</b></button>
+      <button data-view="resolved">Đã xử lý <b id="resolved-nav">0</b></button>
+      <button data-view="answered">Có phản hồi trong nguồn <b id="answered-nav">0</b></button>
+      <button data-view="dismissed">Đã bỏ qua <b id="dismissed-nav">0</b></button>
+    </nav>
+
+    <section id="inbox">
+      <div class="inbox-heading">
+        <div>
+          <h2 id="list-title">Hộp thư câu hỏi</h2>
+          <p id="list-description"></p>
         </div>
+        <label class="search">
+          <span>⌕</span>
+          <input id="search" type="search" placeholder="Tìm câu hỏi, học viên..." aria-label="Tìm câu hỏi">
+          <kbd>/</kbd>
+        </label>
       </div>
 
-      <!-- QUESTIONS CONTAINER -->
-      <div id="questions-container" class="space-y-3.5">
-        <!-- Rendered by JS -->
+      <div class="filter-row">
+        <div id="topic-filters" class="topic-filters" aria-label="Lọc chủ đề"></div>
+        <select id="sort" aria-label="Sắp xếp">
+          <option value="longest">Chờ lâu nhất</option>
+          <option value="newest">Mới nhất</option>
+        </select>
       </div>
-    </div>
 
-    <!-- VIEW 2: FEED VIEW -->
-    <div id="view-markdown" class="hidden space-y-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 font-mono text-sm leading-relaxed text-slate-200 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <span class="text-slate-400 text-xs">Mẫu bản tin tự động đăng vào kênh nội bộ <b>#ta-internal</b></span>
-          <button onclick="navigator.clipboard.writeText(document.getElementById('markdown-text').innerText); showToast('Đã sao chép nội dung Markdown!')" class="text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-950/40 px-3 py-1 rounded border border-indigo-900">
-            📋 Sao chép
-          </button>
+      <div class="question-list" id="questions-container" data-hax="G2 G10 G11 G9 G8"></div>
+      <footer class="list-footer">
+        <span id="result-count"></span>
+        <span>Phản hồi lưu trong phiên · chưa gửi Discord</span>
+      </footer>
+    </section>
+
+    <section id="feed-panel" class="feed-panel" hidden>
+      <div class="inbox-heading">
+        <div>
+          <h2>Bản tin Discord</h2>
+          <p>Tổng hợp cho kênh #ta-internal</p>
         </div>
-        <div id="markdown-text" class="whitespace-pre-wrap bg-slate-950 p-4 rounded-lg border border-slate-800 text-xs">
-# 📢 [BẢN TIN CÂU HỎI TỒN KHOÁ 4] — CA TRỰC CHIỀU
-*Hệ thống phát hiện **9 câu hỏi** của học viên chưa có phản hồi sau >4h. TA trực ca vui lòng bấm link để xử lý.*
-
----
-### 📌 1. ĐIỂM DANH & WORKSHOP
-• **[M69081]** `D2313` (#channel_02 · trôi 24.2h): *"có điểm danh ws không ạ"*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M69081'))
-
-• **[M63574]** `D3082` (#channel_02 · trôi 25.2h): *"buổi workshop chủ nhật ngày mai thì có tính vào số buổi nghỉ ko ạ?..."*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M63574'))
-
----
-### 💻 2. LAB & DEADLINE
-• **[M15902]** `D4412` (#channel_05 · trôi 7.4h): *"Cho em hỏi hạn nộp bài Lab 1 chính xác là mấy giờ tối nay ạ?..."*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M15902'))
-
-• **[M33885]** `D3923` (#channel_02 · trôi 5.2h): *"vào mà cứ bị out ra thì phải làm sao ạ :v"*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M33885'))
-
-• **[M78210]** `D6109` (#channel_03 · trôi 4.8h): *"Mình không tìm thấy file requirements.txt trong repo mẫu..."*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M78210'))
-
----
-### 👥 3. GHÉP ĐỘI & TEAM
-• **[M99769]** `D1224` (#channel_02 · trôi 17.4h): *"cho mình hỏi một team mấy bạn?"*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M99769'))
-
-• **[M67317]** `D3389` (#channel_02 · trôi 14.5h): *"2b vs 2a vẫn join chung được luôn ạ ?"*
-  ↳ [💬 Xem thread & Xử lý](javascript:openDiscordModal('M67317'))
-        </div>
+        <button class="button primary" id="copy-feed">Sao chép bản tin</button>
       </div>
-    </div>
+      <pre id="feed-text"></pre>
+      <div class="report-toolbar">
+        <button class="button" id="show-reports" aria-expanded="false" aria-controls="original-report">Xem / ẩn bản tin bot gốc</button>
+        <span>k4_daily_reports.md</span>
+      </div>
+      <pre id="original-report" hidden></pre>
+    </section>
 
+    <footer class="page-footer">TA Copilot · <span id="breadcrumb">Hộp thư câu hỏi</span> · CSV đã ẩn danh</footer>
   </main>
 
-  <!-- DISCORD MOVE / JUMP CONTEXT MODAL -->
-  <div id="discord-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-[#313338] w-full max-w-xl rounded-xl shadow-2xl border border-slate-700 overflow-hidden flex flex-col max-h-[85vh]">
-      <!-- Header -->
-      <div class="bg-[#2b2d31] px-4 py-3 border-b border-[#1f2023] flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <span class="text-[#80848e] font-bold">#</span>
-          <span id="discord-modal-channel" class="font-semibold text-white text-sm">channel_02</span>
-          <span class="text-xs text-[#80848e]">• Đã di chuyển tới đúng tin nhắn trên Discord</span>
-        </div>
-        <button onclick="closeDiscordModal()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
-      </div>
-
-      <!-- Messages Thread -->
-      <div id="discord-messages-thread" class="p-4 space-y-3 overflow-y-auto flex-1 text-sm">
-        <!-- Rendered by JS -->
-      </div>
-
-      <!-- Reply Box -->
-      <div class="bg-[#2b2d31] p-3.5 border-t border-[#1f2023] space-y-2">
-        <div class="flex items-center justify-between text-xs text-[#949ba4]">
-          <span>Phản hồi dưới vai trò Trợ Giảng (TA):</span>
-          <span class="text-[11px] text-slate-400">Tự động reply vào tin nhắn gốc</span>
-        </div>
-        <textarea id="discord-reply-input" rows="2" class="w-full bg-[#383a40] text-white rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none border-none resize-none"></textarea>
-        <div class="flex justify-between items-center pt-1">
-          <a id="modal-discord-link" href="#" onclick="openDiscordDemo(event)" class="text-xs text-[#5865F2] hover:text-[#4752C4] font-medium flex items-center gap-1">
-            Mở trên Discord App ↗
-          </a>
-          <div class="flex space-x-2">
-            <button onclick="closeDiscordModal()" class="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Đóng</button>
-            <button onclick="submitDiscordModalReply()" class="px-4 py-1.5 rounded text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5">
-              <span>🚀 Gửi Reply &amp; Đóng Case</span>
-            </button>
-          </div>
-        </div>
-      </div>
+  <dialog id="reply-dialog" data-hax="G9 G10" aria-labelledby="dialog-title">
+    <div class="dialog-top">
+      <span>NGỮ CẢNH DISCORD · DỮ LIỆU LOCAL</span>
+      <button class="icon-button" id="close-dialog" aria-label="Đóng">×</button>
     </div>
-  </div>
+    <div id="dialog-content"></div>
+  </dialog>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs font-medium hidden flex items-center space-x-2 transition-all">
-    <span id="toast-msg">Thành công</span>
-  </div>
-
-  <!-- JAVASCRIPT LOGIC -->
-  <script src="data/mock_questions.js">
-
-
-  </script>
-  <script>
-    let activeQuestions = [...MOCK_QUESTIONS];
-    let resolvedCount = 0;
-    let currentTopic = 'all';
-    let currentTargetId = null;
-
-
-    function openDiscordDemo(e) {
-      if(e) e.preventDefault();
-      alert("Tính năng này giúp TA có thể nhảy thẳng vào ứng dụng Discord để xem ngữ cảnh thực tế của học viên.\n\nTuy nhiên, để tuân thủ quy định Bảo mật dữ liệu của Ban tổ chức AI20K (Không truy cập server thật), nút này hiện chỉ mang tính chất Demo mô phỏng.");
-    }
-
-    function renderQuestions() {
-      const container = document.getElementById('questions-container');
-      const filtered = activeQuestions.filter(q => currentTopic === 'all' || q.topic === currentTopic);
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="bg-slate-900 border border-dashed border-slate-800 rounded-xl p-12 text-center">
-            <div class="text-3xl mb-2">🎉</div>
-            <div class="text-sm font-semibold text-slate-200">Tuyệt vời! Đã giải quyết hết câu hỏi tồn.</div>
-            <div class="text-xs text-slate-500 mt-1">Không còn câu hỏi nào trong danh mục này cần xử lý.</div>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(q => {
-        const isCritical = q.waitingHours >= 24;
-        const timeBadge = isCritical 
-          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' 
-          : (q.waitingHours >= 12 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-800 text-slate-400 border-slate-700');
-
-        return `
-          <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4 shadow-sm space-y-3 transition">
-            <!-- Top Line Info -->
-            <div class="flex items-center justify-between flex-wrap gap-2 text-xs">
-              <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full ${isCritical ? 'bg-rose-500 animate-pulse' : 'bg-amber-400'}"></span>
-                <span class="font-bold text-white">${q.author}</span>
-                <button onclick="openDiscordModal('${q.id}')" class="text-indigo-400 hover:text-indigo-300 font-mono flex items-center gap-1 hover:underline" title="Bấm để Move tới Discord xem tin gốc">
-                  <span>#${q.channel}</span>
-                  <span class="text-[10px]">↗</span>
-                </button>
-                <span class="text-slate-600 font-mono">(${q.id})</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold border ${timeBadge}">
-                  ⏱️ Chờ ${q.waitingHours}h
-                </span>
-                <span class="px-2 py-0.5 rounded-full text-[11px] bg-slate-800 text-slate-300">
-                  ${q.topicName}
-                </span>
-              </div>
-            </div>
-
-            <!-- Student Question -->
-            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-              <p class="text-sm text-slate-200 italic font-medium leading-relaxed">"${q.content}"</p>
-              ${q.history ? `
-                <p class="text-[11px] text-rose-400 mt-1.5 flex items-center gap-1">
-                  <span>⚠️</span> <span>${q.history[0].text}</span>
-                </p>
-              ` : ''}
-              ${q.difficultyLayer && q.difficultyLayer.includes('Mơ hồ') ? `
-                <p class="text-[11px] text-amber-400 mt-1 flex items-center gap-1">
-                  <span>💡</span> <span><b>Lưu ý:</b> Câu hỏi ngắn thiếu ngữ cảnh, nên hỏi lại chi tiết trước.</span>
-                </p>
-              ` : ''}
-            </div>
-
-            <!-- Response Composer -->
-            <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-[11px] text-slate-400">
-                <span class="font-medium text-indigo-400">💬 Soạn câu trả lời (Sẽ Reply trực tiếp vào tin nhắn trên #${q.channel}):</span>
-                <span class="text-slate-500">Tự động tag @${q.author}</span>
-              </div>
-              <textarea id="reply-text-${q.id}" rows="2" class="w-full bg-slate-950/90 text-slate-200 text-xs rounded-lg p-2.5 border border-slate-800 focus:ring-1 focus:ring-indigo-500 focus:outline-none resize-none leading-relaxed" placeholder="Nhập câu trả lời cho học viên...">${q.aiSuggestedReply || ""}</textarea>
-            </div>
-
-            <!-- Action Buttons: Move to Discord + Send Reply -->
-            <div class="flex items-center justify-between pt-1 border-t border-slate-800/60 text-xs">
-              <button onclick="dismissQuestion('${q.id}')" class="text-slate-500 hover:text-slate-300 transition py-1 text-xs">
-                ✕ Bỏ qua
-              </button>
-              
-              <div class="flex items-center space-x-2">
-                <!-- NÚT XEM THREAD TẠI CHỖ (MODAL) -->
-                <button onclick="openDiscordModal('${q.id}')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition flex items-center gap-1 border border-slate-700 active:scale-95" title="Xem ngữ cảnh tin nhắn trước và sau">
-                  <span>💬 Xem Thread</span>
-                </button>
-                
-                <!-- NÚT MỞ TRÊN DISCORD APP -->
-                <button onclick="openDiscordDemo(event)" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#5865F2] hover:bg-[#4752C4] text-white transition flex items-center gap-1 shadow-sm active:scale-95" title="Mở trực tiếp trên ứng dụng Discord">
-                  <span>🔗 Tới Discord</span>
-                </button>
-
-                <!-- NÚT GỬI REPLY TRỰC TIẾP -->
-                <button onclick="sendReply('${q.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-sm active:scale-95 ml-2">
-                  <span>🚀 Reply &amp; Đóng Case</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      updateStats();
-    }
-
-    function updateStats() {
-      const pending = activeQuestions.filter(q => q.status === 'pending');
-      document.getElementById('stat-total').innerText = pending.length;
-      document.getElementById('stat-critical').innerText = pending.filter(q => q.waitingHours >= 24).length;
-      document.getElementById('stat-warning').innerText = pending.filter(q => q.waitingHours >= 4 && q.waitingHours < 24).length;
-      document.getElementById('stat-resolved').innerText = resolvedCount;
-    }
-
-    function filterByTopic(topic) {
-      currentTopic = topic;
-      document.querySelectorAll('.topic-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-600', 'text-white');
-        btn.classList.add('bg-slate-900', 'text-slate-400');
-      });
-      event.target.classList.remove('bg-slate-900', 'text-slate-400');
-      event.target.classList.add('bg-indigo-600', 'text-white');
-      renderQuestions();
-    }
-
-    function dismissQuestion(id) {
-      activeQuestions = activeQuestions.filter(q => q.id !== id);
-      showToast('Đã bỏ qua câu hỏi!');
-      renderQuestions();
-    }
-
-    // Direct Reply to Discord Message from Card
-    function sendReply(id) {
-      const q = activeQuestions.find(item => item.id === id);
-      if (!q) return;
-
-      activeQuestions = activeQuestions.filter(item => item.id !== id);
-      resolvedCount++;
-
-      showToast(`🚀 Đã gửi Reply vào tin nhắn ${q.id} trên #${q.channel} cho @${q.author}!`);
-      renderQuestions();
-    }
-
-    // Move to Discord (Opens simulated Discord Thread Modal)
-    function openDiscordModal(id) {
-      currentTargetId = id;
-      const q = MOCK_QUESTIONS.find(item => item.id === id);
-      if (!q) return;
-
-      document.getElementById('discord-modal-channel').innerText = q.channel;
-      const threadContainer = document.getElementById('discord-messages-thread');
-
-      const context = DISCORD_CONTEXT[id] || [
-        { id: "M00001", author: "D9999", time: "10:00", content: "Mọi người làm bài tập đến đâu rồi?" },
-        { id: q.id, author: q.author, time: q.createdAt.split(' ')[1], content: q.content, target: true },
-        { id: "M00003", author: "D8888", time: "10:05", content: "Đang kẹt bước 2 nè b" }
-      ];
-
-      threadContainer.innerHTML = context.map(m => `
-        <div class="p-2.5 rounded-lg flex items-start space-x-3 ${m.target ? 'discord-msg-highlight' : 'hover:bg-slate-800/30'}">
-          <div class="w-8 h-8 rounded-full ${m.target ? 'bg-amber-500 text-black font-bold' : 'bg-indigo-600 text-white'} flex items-center justify-center text-xs shrink-0">
-            ${m.author.slice(0, 2)}
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-baseline space-x-2">
-              <span class="font-semibold text-white text-xs ${m.target ? 'text-amber-300' : ''}">${m.author}</span>
-              <span class="text-[10px] text-[#949ba4]">${m.time}</span>
-              ${m.target ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded font-medium border border-amber-500/40">🎯 Tin nhắn được điều hướng</span>' : ''}
-            </div>
-            <p class="text-xs text-slate-200 mt-1 leading-relaxed">${m.content}</p>
-          </div>
-        </div>
-      `).join('');
-
-      const editedDraft = document.getElementById(`reply-text-${id}`)?.value || q.aiSuggestedReply;
-      document.getElementById('discord-reply-input').value = editedDraft;
-      
-      const realDiscordUrl = `https://discord.com/channels/${q.guild}/${q.channel}/${q.id}`;
-      document.getElementById('modal-discord-link').href = realDiscordUrl;
-
-      document.getElementById('discord-modal').classList.remove('hidden');
-    }
-
-    function closeDiscordModal() {
-      document.getElementById('discord-modal').classList.add('hidden');
-    }
-
-    function submitDiscordModalReply() {
-      if (currentTargetId) {
-        sendReply(currentTargetId);
-        closeDiscordModal();
-      }
-    }
-
-    function switchView(view) {
-      const dashView = document.getElementById('view-dashboard');
-      const mdView = document.getElementById('view-markdown');
-      const dashBtn = document.getElementById('view-dashboard-btn');
-      const mdBtn = document.getElementById('view-markdown-btn');
-
-      if (view === 'dashboard') {
-        dashView.classList.remove('hidden');
-        mdView.classList.add('hidden');
-        dashBtn.classList.add('bg-indigo-600', 'text-white');
-        dashBtn.classList.remove('text-slate-400');
-        mdBtn.classList.remove('bg-indigo-600', 'text-white');
-        mdBtn.classList.add('text-slate-400');
-      } else {
-        dashView.classList.add('hidden');
-        mdView.classList.remove('hidden');
-        mdBtn.classList.add('bg-indigo-600', 'text-white');
-        mdBtn.classList.remove('text-slate-400');
-        dashBtn.classList.remove('bg-indigo-600', 'text-white');
-        dashBtn.classList.add('text-slate-400');
-      }
-    }
-
-    function simulateAIScan() {
-      const barContainer = document.getElementById('scan-bar-container');
-      const bar = document.getElementById('scan-bar');
-      barContainer.classList.remove('hidden');
-      bar.style.width = '0%';
-
-      setTimeout(() => bar.style.width = '45%', 150);
-      setTimeout(() => bar.style.width = '85%', 450);
-      setTimeout(() => {
-        bar.style.width = '100%';
-        setTimeout(() => {
-          barContainer.classList.add('hidden');
-          bar.style.width = '0%';
-          showToast('⚡ Quét hoàn tất: Đã kiểm tra 1.092 tin nhắn mới nhất!');
-        }, 300);
-      }, 800);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toast-msg').innerText = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2500);
-    }
-
-    // Initial render
-    renderQuestions();
-  
-
-
-  </script>
+  <div id="toast" role="status" hidden></div>
 </body>
 </html>
+
+=======
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#020617"><title>TA Copilot — Quản lý câu hỏi Discord</title><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script></head>
+<body>
+<header class="topbar"><div class="header-inner"><a class="brand" href="./"><span class="brand-mark">TA</span><div><h1>TA Copilot <span>Track B2</span></h1><p>Điều phối câu hỏi tồn &gt;4h · Trả lời nhanh hoặc xem ngữ cảnh Discord</p></div></a><div class="header-status"><span class="status-dot"></span><span>Local sync · support inbox</span></div><div class="header-actions"><nav class="view-toggle" aria-label="Chế độ xem"><button data-view="pending" class="active">Danh Sách</button><button data-view="feed">Bản Tin Feed</button></nav><button class="button scan-button" id="scan-button">⚡ Đọc lại dữ liệu</button></div></div></header>
+<main>
+<div class="scan-progress" id="scan-progress" hidden><div></div></div>
+<section class="stats" aria-label="Tổng quan câu hỏi">
+<article class="stat"><div>Tổng Câu Hỏi Tồn</div><div class="stat-bottom"><strong id="stat-total">0</strong><span class="pill purple">Cần xử lý</span></div></article>
+<article class="stat critical-stat"><div>Báo Động SLA (≥24h)</div><div class="stat-bottom"><strong id="stat-critical">0</strong><span class="pill red">Khẩn cấp</span></div></article>
+<article class="stat warning-stat"><div>Tồn Đọng (4h – 24h)</div><div class="stat-bottom"><strong id="stat-warning">0</strong><span class="pill orange">Chờ giải đáp</span></div></article>
+<article class="stat resolved-stat"><div>Đã Xử Lý Trong Ca</div><div class="stat-bottom"><strong id="stat-resolved">0</strong><span class="pill green">Hoàn thành</span></div></article>
+</section>
+<div class="ai-notice"><strong>HAX G1 · TA giữ quyền quyết định.</strong> Hỗ trợ phát hiện câu hỏi tồn &gt;4h và điều hướng; không tự quyết định hay gửi phản hồi. Bản local dùng nhãn đối chiếu, chưa chạy AI tự động.</div>
+<details class="source-banner"><summary id="source-summary">Đang đọc thư mục dữ liệu...</summary><p id="source-detail"></p></details>
+<div id="data-error" class="data-error" role="alert" hidden></div>
+<nav class="status-tabs" aria-label="Trạng thái câu hỏi"><button data-view="pending" class="active">Đang chờ <b id="nav-count">0</b></button><button data-view="awaiting">Chờ làm rõ <b id="awaiting-nav">0</b></button><button data-view="resolved">Đã xử lý <b id="resolved-nav">0</b></button><button data-view="answered">Có phản hồi trong nguồn <b id="answered-nav">0</b></button><button data-view="dismissed">Đã bỏ qua <b id="dismissed-nav">0</b></button></nav>
+<section id="inbox"><div class="inbox-heading"><div><h2 id="list-title">Hộp thư câu hỏi</h2><p id="list-description"></p></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Tìm câu hỏi, học viên..." aria-label="Tìm câu hỏi"><kbd>/</kbd></label></div>
+<div class="filter-row"><div id="topic-filters" class="topic-filters" aria-label="Lọc chủ đề"></div><select id="sort" aria-label="Sắp xếp"><option value="longest">Chờ lâu nhất</option><option value="newest">Mới nhất</option></select></div>
+<div class="question-list" id="questions-container" data-hax="G2 G10 G11 G9 G8"></div><footer class="list-footer"><span id="result-count"></span><span>Phản hồi lưu trong phiên · chưa gửi Discord</span></footer></section>
+<section id="feed-panel" class="feed-panel" hidden><div class="inbox-heading"><div><h2>Bản tin Discord</h2><p>Tổng hợp cho kênh #ta-internal</p></div><button class="button primary" id="copy-feed">Sao chép bản tin</button></div><pre id="feed-text"></pre><div class="report-toolbar"><button class="button" id="show-reports" aria-expanded="false" aria-controls="original-report">Xem / ẩn bản tin bot gốc</button><span>k4_daily_reports.md</span></div><pre id="original-report" hidden></pre></section>
+<footer class="page-footer">TA Copilot · <span id="breadcrumb">Hộp thư câu hỏi</span> · CSV đã ẩn danh</footer>
+</main>
+<dialog id="reply-dialog" data-hax="G9 G10" aria-labelledby="dialog-title"><div class="dialog-top"><span>NGỮ CẢNH DISCORD · DỮ LIỆU LOCAL</span><button class="icon-button" id="close-dialog" aria-label="Đóng">×</button></div><div id="dialog-content"></div></dialog><div id="toast" role="status" hidden></div>
+</body></html>
+>>>>>>> Stashed changes

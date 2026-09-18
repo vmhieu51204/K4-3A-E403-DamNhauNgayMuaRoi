@@ -1,5 +1,85 @@
 # Bộ case Discord K4 — bản nhãn dự thảo
 
+## Chạy eval bằng một lệnh
+
+### Dùng Gemini trực tiếp
+
+Điền `.env` (cấu hình mặc định của `.env.example`):
+
+```dotenv
+EVAL_PROVIDER=gemini
+GEMINI_API_KEY=key_gemini_cua_ban
+GEMINI_MODEL=gemini-3.5-flash-lite
+```
+
+Chạy `python eval/run_eval.py`. Key được lấy từ Google AI Studio.
+Runner mặc định giãn các lần bắt đầu request tối thiểu 5 giây, kể cả retry.
+Có thể tăng bằng `--interval 10` nếu còn gặp giới hạn tốc độ.
+Runner gọi trực tiếp Google qua [Gemini OpenAI-compatible API](https://ai.google.dev/gemini-api/docs/openai),
+không đi qua OpenRouter. Có thể đổi model bằng `GEMINI_MODEL` hoặc `--model`.
+
+### Dùng OpenRouter
+
+Để dùng OpenRouter, điền cấu hình sau vào `.env`:
+
+```dotenv
+EVAL_PROVIDER=openrouter
+OPENROUTER_API_KEY=key_openrouter_cua_ban
+OPENROUTER_MODEL=openai/gpt-4.1-mini
+```
+
+Chạy `python eval/run_eval.py` như cũ. Runner gửi request đến OpenRouter
+Chat Completions, dùng JSON Schema và chỉ chọn provider hỗ trợ các tham số yêu cầu,
+theo [tài liệu OpenRouter](https://openrouter.ai/docs/guides/features/structured-outputs).
+Đổi model bằng `OPENROUTER_MODEL` hoặc `--model`; model cần hỗ trợ structured outputs.
+Key OpenAI và OpenRouter được đọc riêng, không dùng thay nhau. Biến môi trường
+của terminal ưu tiên hơn `.env`. Báo cáo ghi cả provider và model.
+
+### Dùng OpenAI trực tiếp
+
+Yêu cầu Python 3.10+, không cần `pip install`. Tạo `.env` tại thư mục gốc
+và điền `EVAL_PROVIDER=openai`, `OPENAI_API_KEY=...`. Sau đó chạy:
+
+```powershell
+python eval/run_eval.py
+```
+
+Nếu chưa có key trong môi trường hoặc `.env`, terminal tương tác sẽ hỏi key
+bằng ô nhập ẩn, không lưu key. Script gọi OpenAI API thật và sử dụng quota API.
+Mặc định chạy đủ 20 case với `gpt-4.1-mini`; đổi bằng `--model` hoặc `OPENAI_MODEL`.
+Đây là **baseline prompt eval**, chưa nối vào prototype HTML hoặc backend app.
+
+Script tự tìm CSV ở đường dẫn nguồn bên dưới. Máy khác đặt `K4_MESSAGES_CSV`
+trong `.env`, hoặc truyền `--source-csv "D:/path/k4_messages.csv"`.
+Thiếu CSV/context, trùng bản ghi hoặc context vượt mốc đánh giá được báo SKIP,
+không lấy tóm tắt hay đáp án thay dữ liệu gốc, không tính SKIP là PASS.
+
+Các lệnh tùy chọn:
+
+```powershell
+python eval/run_eval.py --dry-run
+python eval/run_eval.py --dataset synthetic
+python eval/run_eval.py --dataset synthetic --limit 2
+python eval/run_eval.py --prompt-file eval/my_prompt.txt
+python -m unittest discover -s eval -p "test_*.py"
+```
+
+Kết quả từng case in ngay ở terminal. `eval/results/<timestamp>.json` chứa
+tổng hợp riêng all/real/synthetic, accuracy từng trường và precision/recall backlog;
+`.jsonl` cùng tên chứa prediction, expected, các trường đúng/sai, thời gian và
+token usage từng case. File JSONL được ghi sau mỗi case để giữ tiến độ khi dừng.
+Thư mục kết quả được gitignore. Tỷ lệ chỉ tính case gọi API thành công;
+báo riêng lỗi và bỏ qua, mẫu số 0 hiển thị N/A/null.
+
+PASS nghĩa là khớp 9 trường nhãn (hai trường danh sách so như tập hợp), **chưa
+chứng minh câu nháp grounded hoặc tuân thủ `must_not`**. Các phần văn bản cần
+người duyệt; không chấm bằng độ giống câu chữ. Không gửi `expected`, `annotation`
+hoặc `scenario_summary` cho model. Mã thoát: 0 mọi case khớp, 1 có nhãn sai,
+2 lỗi/thiếu dữ liệu, 130 người dùng dừng. `--dry-run` chỉ kiểm tra dữ liệu.
+
+API dùng Responses với Structured Outputs theo
+[OpenAI Docs](https://developers.openai.com/api/docs/guides/structured-outputs).
+
 Đã đối chiếu CSV thật ngày 17/09/2026. Không thay đổi code ứng dụng hoặc spec.
 
 ## Kết luận về độ phủ

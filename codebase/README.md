@@ -1,50 +1,40 @@
-# Prototype — TA Copilot (Track B2: Bản Tin Câu Hỏi Tồn & Điều Hướng Trực Tiếp)
-**Nhóm:** K4-3A-DamNhauNgayMuaRoi · Zone 2  
-**Mốc:** Checkpoint 2 (CP2) — Prototype Bấm Được (Mock / Interactive Flow)
+# TA Copilot — UI với dữ liệu Discord local
 
----
+## Chạy
 
-## 🎯 Lát cắt 1 câu được hiện thực hoá
-> *"Một Trợ giảng (TA) · cuối ca trực mở bản tin tổng hợp · AI trích xuất danh sách các câu hỏi chưa được giải đáp sau 4 giờ và gom nhóm theo chủ đề kèm link tin nhắn trực tiếp · TA bấm link nhảy đến Discord và trả lời dứt điểm từng câu hỏi."*
+Từ thư mục repo:
 
----
-
-## 🚀 Cách chạy Demo (Trong 5 giây)
-
-### Cách 1: Mở trực tiếp bằng trình duyệt
-Chỉ cần nhấp đúp vào file `index.html` hoặc chạy lệnh sau trên terminal Mac:
-```bash
-open codebase/index.html
+```powershell
+python codebase/server.py
 ```
 
-### Cách 2: Chạy qua Python Local Server
-```bash
-cd codebase
-python3 -m http.server 8080
+Mở **http://127.0.0.1:8081**. Không dùng server tĩnh cũ ở cổng 8080: UI cần API Python để đọc dữ liệu. Không cần cài thư viện Python ngoài.
+
+## Nguồn và phạm vi
+
+- Đọc trực tiếp `data/discord-pack/k4_messages.csv`, không nhúng nội dung riêng tư vào file JS hoặc commit thêm bản sao dữ liệu.
+- Dùng nhãn nháp của `eval/real_cases.jsonl` để chọn và phân loại các case đã đối chiếu. Đây không phải pipeline AI tự động phát hiện toàn bộ câu hỏi trong CSV.
+- Pack hiện có 1.092 tin: 779 tin người, 313 tin bot. Trong 12 case đối chiếu có 10 yêu cầu hỗ trợ: 7 cần xem xét, 3 đã có phản hồi. Hai case còn lại là tin bot và tin không phải câu hỏi.
+- Thời gian chờ tính theo mốc đánh giá riêng của từng case, không tính từ ngày hiện tại. Nhãn chỉ phản ánh ngữ cảnh đã chọn tới mốc đó, cần TA duyệt lại.
+- Nội dung câu hỏi, tác giả, kênh, thời gian và ngữ cảnh lấy nguyên từ CSV. Không suy ra vai trò TA/BTC từ mã tác giả.
+- Xem bản tin bot gốc `k4_daily_reports.md` trong mục Bản tin Discord.
+
+## Thao tác
+
+Tìm theo nội dung, mã tin, tác giả, kênh hoặc server; lọc chủ đề; sắp xếp theo thời gian. Mở câu hỏi để xem ngữ cảnh, lý do phân loại, bằng chứng phản hồi và lưu ý của nhãn nháp. Có thể sửa mẫu trả lời, lưu phản hồi, bỏ qua và đưa lại hộp thư. Nút **Đọc lại dữ liệu** nạp CSV mới nhưng giữ thao tác trong phiên.
+
+Mẫu trả lời được soạn sẵn theo loại hành động, không phải kết quả AI. Phản hồi chỉ lưu trong bộ nhớ trình duyệt, chưa gửi Discord. Tải lại trang sẽ đặt lại thao tác. Pack đã ẩn danh không có Jump URL thật nên UI hiển thị ngữ cảnh local.
+
+Máy chủ chỉ nghe tại `127.0.0.1`, chỉ phục vụ các asset UI và hai API đọc dữ liệu, không mở toàn bộ thư mục repo. Giữ thư mục `data/` trong gitignore. Font Google có font hệ thống dự phòng.
+
+## Kiểm tra
+
+```powershell
+python -m unittest discover -s codebase -p "test_*.py"
 ```
-Sau đó truy cập: [http://localhost:8080](http://localhost:8080)
 
----
+## HAX trong UI
 
-## 🎬 Kịch bản Demo 5 Bước cho TA & Giám Khảo (CP2)
+Banner G1 nêu phạm vi; huy hiệu G2 báo chưa có điểm AI thật. Mỗi thẻ có mục AI Reasoning (G11) ghi rõ nguồn nhãn đối chiếu. Case mơ hồ có cờ G10 và bản nháp hỏi lại; lưu chuyển sang **Chờ làm rõ**, không tăng **Đã xử lý**. TA sửa bản nháp trong modal (G9), bỏ qua một click và khôi phục được (G8). Xem mô tả đầy đủ tại `spec.md` §4b.
 
-1. **Bước 1: Đọc tổng quan ca trực & KPI:**
-   - TA mở Dashboard, nhìn ngay vào 4 chỉ số: *Tổng câu hỏi tồn (9)*, *Báo động SLA >24h (2)*, *Tồn đọng 4h-24h (7)*, *Đã xử lý (0)*.
-2. **Bước 2: Lọc theo chủ đề & Lớp chỗ khó (Taxonomy):**
-   - Bấm chọn các tab: *Điểm danh & WS*, *Lab & Code*, *Ghép đội*, *Quy chế*.
-   - Lọc theo 4 lớp chỗ khó: ① Nguồn sự thật, ② Mơ hồ / Thiếu thông tin, ③ Ngoài phạm vi, ④ Đặc thù domain.
-3. **Bước 3: Xem chi tiết câu hỏi & HAX / PAIR:**
-   - Quan sát các thẻ câu hỏi thực tế được trích xuất từ dataset `k4_messages.csv` (ví dụ `M69081`, `M30246`, `M33885`).
-   - Kiểm tra các nguyên tắc HAX được cài cắm:
-     - **HAX G1:** Làm rõ phạm vi hệ thống ở banner đầu trang.
-     - **HAX G2:** Hiển thị độ tin cậy của AI (ví dụ: 96%).
-     - **HAX G11:** Giải thích lý do AI gom nhóm và phát hiện câu hỏi chưa giải đáp.
-     - **HAX G9:** Khung câu trả lời gợi ý cho phép TA chỉnh sửa trực tiếp.
-     - **HAX G8:** Nút "Bỏ qua" giúp gạt bỏ dễ dàng.
-4. **Bước 4: Bấm "🔗 Nhảy tới Discord (Jump URL)" (Điểm nhấn của Lát Cắt):**
-   - Click nút Jump URL trên câu hỏi `M69081` hoặc `M30246`.
-   - Hệ thống hiển thị Modal giả lập giao diện Discord `#channel_02` với đúng ngữ cảnh tin nhắn trước và sau, tin nhắn cần giải quyết được làm nổi bật màu vàng (amber highlight).
-   - Ô phản hồi được điền sẵn bản nháp AI, TA có thể sửa hoặc bấm **"🚀 Gửi Phản Hồi & Đóng Case"**.
-5. **Bước 5: Hoàn tất & Cập nhật số liệu:**
-   - Câu hỏi được đóng, biến mất khỏi danh sách chờ, số đếm *Đã xử lý* nhảy lên +1.
-   - Chuyển sang chế độ **"📑 Bản Tin Discord"** ở góc phải trên để xem giao diện bản tin Markdown được gửi tự động vào kênh nội bộ TA.
+Giao diện bám HTML gốc: nền tối, header ngang, bốn ô thống kê, thẻ câu hỏi có ô soạn và nút lưu ngay trên thẻ. Bản nháp đồng bộ giữa thẻ và modal ngữ cảnh.
