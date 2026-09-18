@@ -63,7 +63,8 @@ FE có thể mở file này trực tiếp trên trình duyệt để "vibe" và 
 2. **Luồng Xử lý (Workflow) & AI Hỗ Trợ:**
    - **Nút "💬 Xem Thread":** Mở Modal mô phỏng Discord để xem ngữ cảnh tin nhắn của học viên trước và sau khi nhắn.
    - **Nút "🔗 Tới Discord":** Redirect trực tiếp mở URL thực của Discord App (theo cấu trúc `https://discord.com/channels/{guild}/{channel}/{id}`).
-   - **✨ TÍNH NĂNG MỚI: AI Gợi ý trả lời (Suggested Reply):** Khi mở Modal xử lý, khung soạn thảo sẽ tự động được điền sẵn một câu trả lời nháp do AI sinh ra (nằm trong trường `aiSuggestedReply` của dữ liệu). Điểm đặc biệt là AI tự động đọc hiểu **lịch sử trò chuyện trước đó** để chắt lọc đáp án cụ thể và xưng hô tự nhiên, giúp TA không cần kéo lên xem lại lịch sử.
+   - **✨ TÍNH NĂNG MỚI: AI Gợi ý trả lời (Suggested Reply):** Khi mở Modal xử lý, khung soạn thảo sẽ tự động được điền sẵn một câu trả lời nháp do AI sinh ra (nằm trong trường `aiSuggestedReply` của dữ liệu). Điểm đặc biệt là AI tự động đọc hiểu **lịch sử trò chuyện trước đó** để chắt lọc đáp án cụ thể và xưng hô tự nhiên. 
+     *Lưu ý cho FE: Nếu API trả về `aiSuggestedReply` rỗng hoặc null, phải handle cẩn thận để ô textarea hiển thị trống (dùng `placeholder="Nhập câu trả lời..."`) thay vì hiện chữ "undefined".*
    - **Nút "🚀 Reply & Đóng Case":** Xử lý gửi tin phản hồi (bản nháp của AI hoặc TA tự sửa) và ẩn thẻ câu hỏi khỏi feed.
 3. **Bản tin Markdown:** Tự động tổng hợp danh sách câu hỏi tồn đọng để TA có thể copy/paste báo cáo tiến độ vào kênh nội bộ.
 
