@@ -60,10 +60,11 @@ FE có thể mở file này trực tiếp trên trình duyệt để "vibe" và 
    - Danh sách thẻ (Card) hiển thị tin nhắn.
    - Các badge phân loại độ khẩn cấp (SLA >24h, 4h-24h).
    - Bộ lọc theo Topic (Điểm danh, Lab, Ghép đội, v.v.).
-2. **Luồng Xử lý (Workflow):**
+2. **Luồng Xử lý (Workflow) & AI Hỗ Trợ:**
    - **Nút "💬 Xem Thread":** Mở Modal mô phỏng Discord để xem ngữ cảnh tin nhắn của học viên trước và sau khi nhắn.
    - **Nút "🔗 Tới Discord":** Redirect trực tiếp mở URL thực của Discord App (theo cấu trúc `https://discord.com/channels/{guild}/{channel}/{id}`).
-   - **Nút "🚀 Reply & Đóng Case":** Xử lý gửi tin phản hồi đã được AI soạn sẵn (hoặc TA tự chỉnh sửa) và ẩn thẻ câu hỏi.
+   - **✨ TÍNH NĂNG MỚI: AI Gợi ý trả lời (Suggested Reply):** Khi mở Modal xử lý, khung soạn thảo sẽ tự động được điền sẵn một câu trả lời nháp do AI sinh ra (nằm trong trường `aiSuggestedReply` của dữ liệu). Điểm đặc biệt là AI tự động đọc hiểu **lịch sử trò chuyện trước đó** để chắt lọc đáp án cụ thể và xưng hô tự nhiên, giúp TA không cần kéo lên xem lại lịch sử.
+   - **Nút "🚀 Reply & Đóng Case":** Xử lý gửi tin phản hồi (bản nháp của AI hoặc TA tự sửa) và ẩn thẻ câu hỏi khỏi feed.
 3. **Bản tin Markdown:** Tự động tổng hợp danh sách câu hỏi tồn đọng để TA có thể copy/paste báo cáo tiến độ vào kênh nội bộ.
 
 ## 4. Kiến Trúc Hoạt Động (Frontend ↔ Backend)
