@@ -46,7 +46,7 @@ QUY TẮC PHÂN LOẠI CƠ BẢN & SOẠN NHÁP:
 - topic: "attendance" | "lab" | "team" | "policy" | "technical" | "other"
 - expected_in_backlog: "yes" nếu cần TA hỗ trợ; "no" nếu đã giải quyết xong hoặc là tin tán gẫu ngoài lề.
 - action: "answer" | "clarify" | "reject" | "dismiss"
-- suggested_reply: Câu trả lời nháp. BẮT BUỘC phải dựa vào phần "Ngữ cảnh liên quan" (lịch sử trò chuyện thực tế) để có giọng điệu tự nhiên, xưng hô phù hợp và tiếp nối đúng mạch hội thoại. Tự động lấy thông tin từ ngữ cảnh nếu có.
+- suggested_reply: Câu trả lời nháp. BẮT BUỘC phải dựa vào phần "Ngữ cảnh liên quan" (lịch sử trò chuyện thực tế) để có giọng điệu tự nhiên và xưng hô phù hợp. ĐẶC BIỆT LƯU Ý: Nếu ngữ cảnh có chứa cách giải quyết của bạn khác trước đó, hãy chắt lọc và trình bày lại ĐÁP ÁN CỤ THỂ, tuyệt đối KHÔNG trả lời mơ hồ kiểu "hãy làm theo cách mình vừa chỉ bạn B ở trên" hay "hãy kéo lên trên đọc".
 
 Trả về DUY NHẤT một JSON hợp lệ:
 {
