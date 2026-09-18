@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,25 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
     .discord-msg-highlight {
       background-color: rgba(250, 166, 26, 0.14);
       border-left: 3px solid #faa61a;
     }
   </style>
 </head>
+
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
   <!-- TOP HEADER -->
   <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow text-base">
+        <div
+          class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow text-base">
           TA
         </div>
         <div>
@@ -34,15 +40,18 @@
 
       <div class="flex items-center space-x-2.5">
         <div class="bg-slate-900 p-1 rounded-lg border border-slate-800 flex text-xs">
-          <button id="view-dashboard-btn" onclick="switchView('dashboard')" class="px-3 py-1.5 rounded-md font-medium bg-indigo-600 text-white transition">
+          <button id="view-dashboard-btn" onclick="switchView('dashboard')"
+            class="px-3 py-1.5 rounded-md font-medium bg-indigo-600 text-white transition">
             Danh Sách
           </button>
-          <button id="view-markdown-btn" onclick="switchView('markdown')" class="px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-slate-200 transition">
+          <button id="view-markdown-btn" onclick="switchView('markdown')"
+            class="px-3 py-1.5 rounded-md font-medium text-slate-400 hover:text-slate-200 transition">
             Bản Tin Feed
           </button>
         </div>
 
-        <button onclick="simulateAIScan()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5">
+        <button onclick="simulateAIScan()"
+          class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5">
           <span>⚡ Quét Tin</span>
         </button>
       </div>
@@ -94,11 +103,21 @@
       <!-- TOPIC FILTER PILLS -->
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
         <div class="flex flex-wrap gap-1.5" id="topic-filters">
-          <button onclick="filterByTopic('all')" class="topic-btn active px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white">Tất cả (9)</button>
-          <button onclick="filterByTopic('attendance')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📌 Điểm danh / Workshop</button>
-          <button onclick="filterByTopic('lab')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">💻 Lab &amp; Deadline</button>
-          <button onclick="filterByTopic('team')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">👥 Ghép Đội</button>
-          <button onclick="filterByTopic('policy')" class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📋 Quy chế</button>
+          <button onclick="filterByTopic('all')"
+            class="topic-btn active px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white">Tất cả
+            (9)</button>
+          <button onclick="filterByTopic('attendance')"
+            class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📌
+            Điểm danh / Workshop</button>
+          <button onclick="filterByTopic('lab')"
+            class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">💻
+            Lab &amp; Deadline</button>
+          <button onclick="filterByTopic('team')"
+            class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">👥
+            Ghép Đội</button>
+          <button onclick="filterByTopic('policy')"
+            class="topic-btn px-3 py-1 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white border border-slate-800">📋
+            Quy chế</button>
         </div>
       </div>
 
@@ -110,43 +129,50 @@
 
     <!-- VIEW 2: FEED VIEW -->
     <div id="view-markdown" class="hidden space-y-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 font-mono text-sm leading-relaxed text-slate-200 space-y-4">
+      <div
+        class="bg-slate-900 border border-slate-800 rounded-xl p-6 font-mono text-sm leading-relaxed text-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <span class="text-slate-400 text-xs">Mẫu bản tin tự động đăng vào kênh nội bộ <b>#ta-internal</b></span>
-          <button onclick="navigator.clipboard.writeText(document.getElementById('markdown-text').innerText); showToast('Đã sao chép nội dung Markdown!')" class="text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-950/40 px-3 py-1 rounded border border-indigo-900">
+          <button
+            onclick="navigator.clipboard.writeText(document.getElementById('markdown-text').innerText); showToast('Đã sao chép nội dung Markdown!')"
+            class="text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-950/40 px-3 py-1 rounded border border-indigo-900">
             📋 Sao chép
           </button>
         </div>
         <div id="markdown-text" class="whitespace-pre-wrap bg-slate-950 p-4 rounded-lg border border-slate-800 text-xs">
-# 📢 [BẢN TIN CÂU HỎI TỒN KHOÁ 4] — CA TRỰC CHIỀU
-*Hệ thống phát hiện **9 câu hỏi** của học viên chưa có phản hồi sau >4h. TA trực ca vui lòng bấm link để xử lý.*
+          # 📢 [BẢN TIN CÂU HỎI TỒN KHOÁ 4] — CA TRỰC CHIỀU
+          *Hệ thống phát hiện **9 câu hỏi** của học viên chưa có phản hồi sau >4h. TA trực ca vui lòng bấm link để xử
+          lý.*
 
----
-### 📌 1. ĐIỂM DANH & WORKSHOP
-• **[M69081]** `D2313` (#channel_02 · trôi 24.2h): *"có điểm danh ws không ạ"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M69081'))
+          ---
+          ### 📌 1. ĐIỂM DANH & WORKSHOP
+          • **[M69081]** `D2313` (#channel_02 · trôi 24.2h): *"có điểm danh ws không ạ"*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M69081'))
 
-• **[M63574]** `D3082` (#channel_02 · trôi 25.2h): *"buổi workshop chủ nhật ngày mai thì có tính vào số buổi nghỉ ko ạ?..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M63574'))
+          • **[M63574]** `D3082` (#channel_02 · trôi 25.2h): *"buổi workshop chủ nhật ngày mai thì có tính vào số buổi
+          nghỉ ko ạ?..."*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M63574'))
 
----
-### 💻 2. LAB & DEADLINE
-• **[M15902]** `D4412` (#channel_05 · trôi 7.4h): *"Cho em hỏi hạn nộp bài Lab 1 chính xác là mấy giờ tối nay ạ?..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M15902'))
+          ---
+          ### 💻 2. LAB & DEADLINE
+          • **[M15902]** `D4412` (#channel_05 · trôi 7.4h): *"Cho em hỏi hạn nộp bài Lab 1 chính xác là mấy giờ tối nay
+          ạ?..."*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M15902'))
 
-• **[M33885]** `D3923` (#channel_02 · trôi 5.2h): *"vào mà cứ bị out ra thì phải làm sao ạ :v"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M33885'))
+          • **[M33885]** `D3923` (#channel_02 · trôi 5.2h): *"vào mà cứ bị out ra thì phải làm sao ạ :v"*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M33885'))
 
-• **[M78210]** `D6109` (#channel_03 · trôi 4.8h): *"Mình không tìm thấy file requirements.txt trong repo mẫu..."*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M78210'))
+          • **[M78210]** `D6109` (#channel_03 · trôi 4.8h): *"Mình không tìm thấy file requirements.txt trong repo
+          mẫu..."*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M78210'))
 
----
-### 👥 3. GHÉP ĐỘI & TEAM
-• **[M99769]** `D1224` (#channel_02 · trôi 17.4h): *"cho mình hỏi một team mấy bạn?"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M99769'))
+          ---
+          ### 👥 3. GHÉP ĐỘI & TEAM
+          • **[M99769]** `D1224` (#channel_02 · trôi 17.4h): *"cho mình hỏi một team mấy bạn?"*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M99769'))
 
-• **[M67317]** `D3389` (#channel_02 · trôi 14.5h): *"2b vs 2a vẫn join chung được luôn ạ ?"*
-  ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M67317'))
+          • **[M67317]** `D3389` (#channel_02 · trôi 14.5h): *"2b vs 2a vẫn join chung được luôn ạ ?"*
+          ↳ [🔗 Move tới Discord tin nhắn](javascript:openDiscordModal('M67317'))
         </div>
       </div>
     </div>
@@ -154,8 +180,10 @@
   </main>
 
   <!-- DISCORD MOVE / JUMP CONTEXT MODAL -->
-  <div id="discord-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-[#313338] w-full max-w-xl rounded-xl shadow-2xl border border-slate-700 overflow-hidden flex flex-col max-h-[85vh]">
+  <div id="discord-modal"
+    class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div
+      class="bg-[#313338] w-full max-w-xl rounded-xl shadow-2xl border border-slate-700 overflow-hidden flex flex-col max-h-[85vh]">
       <!-- Header -->
       <div class="bg-[#2b2d31] px-4 py-3 border-b border-[#1f2023] flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -177,10 +205,13 @@
           <span>Phản hồi dưới vai trò Trợ Giảng (TA):</span>
           <span class="text-[11px] text-slate-400">Tự động reply vào tin nhắn gốc</span>
         </div>
-        <textarea id="discord-reply-input" rows="2" class="w-full bg-[#383a40] text-white rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none border-none resize-none"></textarea>
+        <textarea id="discord-reply-input" rows="2"
+          class="w-full bg-[#383a40] text-white rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none border-none resize-none"></textarea>
         <div class="flex justify-end space-x-2 pt-1">
-          <button onclick="closeDiscordModal()" class="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Đóng</button>
-          <button onclick="submitDiscordModalReply()" class="px-4 py-1.5 rounded text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5">
+          <button onclick="closeDiscordModal()"
+            class="px-3 py-1.5 rounded text-xs text-slate-400 hover:text-white">Đóng</button>
+          <button onclick="submitDiscordModalReply()"
+            class="px-4 py-1.5 rounded text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5">
             <span>🚀 Gửi Reply &amp; Đóng Case</span>
           </button>
         </div>
@@ -189,7 +220,8 @@
   </div>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs font-medium hidden flex items-center space-x-2 transition-all">
+  <div id="toast"
+    class="fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs font-medium hidden flex items-center space-x-2 transition-all">
     <span id="toast-msg">Thành công</span>
   </div>
 
@@ -218,8 +250,8 @@
 
       container.innerHTML = filtered.map(q => {
         const isCritical = q.waitingHours >= 24;
-        const timeBadge = isCritical 
-          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' 
+        const timeBadge = isCritical
+          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
           : (q.waitingHours >= 12 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-800 text-slate-400 border-slate-700');
 
         return `
@@ -431,4 +463,5 @@
     renderQuestions();
   </script>
 </body>
+
 </html>

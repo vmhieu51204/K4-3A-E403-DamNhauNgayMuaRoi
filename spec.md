@@ -183,10 +183,21 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới (B2)
 
 ## §8. Phân Công & Kế Hoạch Nhóm
 
-- **Phân công nhiệm vụ cụ thể:**
-  - *Nguyễn Đình Phúc:* Lead thiết kế Spec, triển khai Prototype giao diện tương tác & tài liệu hoá HAX/PAIR.
-  - *Vũ Minh Hiếu:* Phân tích Dataset Discord, xây dựng Golden Set 20 case và đo lường kiểm thử.
-  - *Thành viên nhóm:* Chuẩn bị slide thuyết trình, kịch bản demo 5 phút và video dự phòng.
+- **Phân công nhiệm vụ cụ thể theo từng thành viên (Khớp 100% với `README.md`):**
+  - **Vũ Minh Hiếu (Mã HV: 2A202602779) — Nhóm trưởng:**
+    - Điều phối tiến độ chung, phân chia công việc và đồng bộ giữa các thành viên.
+    - Chịu trách nhiệm chính về hoàn thiện các tài liệu dự án: `Canvas`, `spec.md` (chuẩn hóa Spec §1–§9) và quản lý tài liệu repo.
+  - **Dương Minh Hiếu (Mã HV: 2A202602488) — Thiết kế Eval & UI:**
+    - Khai phá dữ liệu từ `data/discord-pack/k4_messages.csv`, xây dựng bộ Golden Set 35 cases (12 case thật + 23 case giả lập biên bao phủ 4 lớp chỗ khó).
+    - Implement giao diện người dùng tương tác Dashboard, cài đặt các nguyên tắc HAX (G1, G2, G8, G9, G10, G11) và modal giả lập Discord Jump URL.
+  - **Nguyễn Đình Phúc (Mã HV: 2A202602953) — LLM API & Prompt:**
+    - Thiết kế kiến trúc LLM API, xây dựng hệ thống Prompt Engineering (Prompt v0 baseline & Prompt v1 tối ưu với 4 rào chắn bảo vệ Guardrails v1).
+    - Xây dựng cơ chế phân tích ngữ cảnh luồng trao đổi (Thread Context Resolution), kiểm thử và tối ưu hóa hệ thống giúp nâng pass rate từ 88.6% (Run 1) lên 100.0% (Run 2).
+    - Thiết kế bản mẫu UI. 
+  - **Đoàn Tuấn Long (Mã HV: 2A202602609) — Kiểm thử hệ thống, Tạo Slide & Video Demo:**
+    - Chạy kiểm thử chức năng toàn diện của hệ thống prototype end-to-end.
+    - Tổ chức kiểm thử với người dùng ngoài nhóm (User Validation), thu thập feedback và nhật ký quan sát.
+    - Soạn thảo Slide báo cáo 6 trang chuẩn Rubric (`demo-slides.pdf`), kịch bản thuyết trình và quay video demo dự phòng.
 - **Willing Users dự kiến (≥2 người ngoài nhóm):**
   1. *Nguyễn Văn A (TA Khoá 4)* — Thử nghiệm thực tế luồng duyệt câu hỏi tồn trên bản tin.
   2. *Trần Thị B (Học viên Khoá 4)* — Đánh giá chất lượng và tốc độ phản hồi khi TA dùng công cụ.
