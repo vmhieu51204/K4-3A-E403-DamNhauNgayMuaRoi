@@ -11,6 +11,7 @@
 | Vũ Minh Hiếu | 2A202602779 | Nhóm trưởng |  |
 | Dương Minh Hiếu | 2A202602488 |  |  |
 | Nguyễn Đình Phúc | 2A202602953 |  |  |
+| Đoàn Tuấn Long | 2A202602609 |  |  |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
 
